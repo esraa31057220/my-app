@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ProductService } from '../../services/product.service';
+import { CategoryService } from '../../core/services/category.service';
 import { ICategory } from '../../models/icategory';
 import { AdminDataTableComponent } from '../shared/admin-data-table/admin-data-table';
 
@@ -13,7 +13,7 @@ import { AdminDataTableComponent } from '../shared/admin-data-table/admin-data-t
   styleUrl: './admin-categories.css',
 })
 export class AdminCategories implements OnInit {
-  private productService = inject(ProductService);
+  private categoryService = inject(CategoryService);
 
   rows = signal<Record<string, unknown>[]>([]);
   newName = signal('');
@@ -30,7 +30,7 @@ export class AdminCategories implements OnInit {
   }
 
   reload(): void {
-    this.productService.getCategories().subscribe((c) => {
+    this.categoryService.getCategories().subscribe((c: ICategory[]) => {
       this.rows.set(c as unknown as Record<string, unknown>[]);
     });
   }
@@ -48,7 +48,7 @@ export class AdminCategories implements OnInit {
   saveEdit(): void {
     const id = this.editId();
     if (id == null) return;
-    this.productService.updateCategory(id, { name: this.editName().trim() }).subscribe(() => {
+    this.categoryService.updateCategory(id, { name: this.editName().trim() }).subscribe(() => {
       this.cancelEdit();
       this.reload();
     });
@@ -57,7 +57,7 @@ export class AdminCategories implements OnInit {
   add(): void {
     const n = this.newName().trim();
     if (!n) return;
-    this.productService.createCategory({ name: n }).subscribe(() => {
+    this.categoryService.createCategory({ name: n }).subscribe(() => {
       this.newName.set('');
       this.reload();
     });
@@ -66,6 +66,6 @@ export class AdminCategories implements OnInit {
   deleteRow(id: unknown): void {
     const n = Number(id);
     if (Number.isNaN(n)) return;
-    this.productService.deleteCategory(n).subscribe(() => this.reload());
+    this.categoryService.deleteCategory(n).subscribe(() => this.reload());
   }
 }

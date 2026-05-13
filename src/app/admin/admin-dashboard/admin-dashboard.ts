@@ -2,9 +2,10 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { UsersService } from '../../services/user.service';
-import { ProductService } from '../../services/product.service';
-import { OrderService } from '../../services/order.service';
+import { UsersService } from '../../shared/services/user.service';
+import { ProductService } from '../../core/services/product.service';
+import { CategoryService } from '../../core/services/category.service';
+import { OrderService } from '../../core/services/order.service';
 import { SellerStatsService } from '../services/seller-stats.service';
 
 @Component({
@@ -17,6 +18,7 @@ import { SellerStatsService } from '../services/seller-stats.service';
 export class AdminDashboard implements OnInit {
   private usersService = inject(UsersService);
   private products = inject(ProductService);
+  private categories = inject(CategoryService);
   private orders = inject(OrderService);
   private seller = inject(SellerStatsService);
 
@@ -34,7 +36,7 @@ export class AdminDashboard implements OnInit {
       users: this.usersService.getUsers().pipe(catchError(() => of([]))),
       orders: this.orders.getAllOrders().pipe(catchError(() => of([]))),
       products: this.products.getProducts().pipe(catchError(() => of([]))),
-      categories: this.products.getCategories().pipe(catchError(() => of([]))),
+      categories: this.categories.getCategories().pipe(catchError(() => of([]))),
       sales: this.seller.salesStatus().pipe(catchError(() => of(null))),
       low: this.seller.lowStockAlert().pipe(catchError(() => of(null))),
       top: this.seller.topSelling().pipe(catchError(() => of(null))),
