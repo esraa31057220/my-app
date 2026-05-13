@@ -1,0 +1,42 @@
+<section class="hero">
+  <div class="hero-bg-dots"></div>
+  <div class="hero-inner">
+    <!-- Left -->
+    <div class="hero-content">
+      <p class="hero-eyebrow">COMPANY LOGO</p>
+      <h1 class="hero-headline">Online Shopping</h1>
+      <p class="hero-sub">Everything you need, delivered fresh to your door — all in one place.</p>
+      <a href="#" class="btn btn-primary">Get Started</a>
+    </div>
+
+    <!-- Right: your illustration -->
+    <div class="hero-visual">
+      <img class="hero-visual-img" src="/shoppingcartimg.png" alt="Online shopping illustration" />
+    </div>
+  </div>
+</section>
+
+@if (banners().length) {
+  <section class="home-banners" aria-label="Featured">
+    @for (b of banners(); track b.id) {
+      @if (b.linkUrl) {
+        <a
+          class="home-banner-card"
+          [href]="b.linkUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img [src]="b.imageUrl" [alt]="b.title" loading="lazy" />
+          <span class="home-banner-title">{{ b.title }}</span>
+        </a>
+      } @else {
+        <div class="home-banner-card">
+          <img [src]="b.imageUrl" [alt]="b.title" loading="lazy" />
+          <span class="home-banner-title">{{ b.title }}</span>
+        </div>
+      }
+    }
+  </section>
+}
+
+<app-master-products></app-master-products>

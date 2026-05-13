@@ -1,0 +1,17 @@
+<div class="adm-page">
+  <h1 class="adm-page-title">Promo codes</h1>
+  <p class="adm-page-sub">Stored via API when available; otherwise saved in this browser (local).</p>
+  <div class="adm-form-row">
+    <input type="text" placeholder="CODE" [(ngModel)]="draft.code" />
+    <input type="number" placeholder="%" [(ngModel)]="draft.discountPercent" />
+    <input type="date" [(ngModel)]="draft.expiresAt" />
+    <label><input type="checkbox" [(ngModel)]="draft.active" /> Active</label>
+    <button type="button" class="adm-btn-primary" (click)="add()">Add</button>
+  </div>
+  <app-admin-data-table [columns]="cols" [rowSource]="rows()" [searchKeys]="['code']">
+    <ng-template #actions let-row>
+      <button type="button" class="adm-link" (click)="toggle(row)">Toggle</button>
+      <button type="button" class="adm-danger" (click)="remove(row['id'])">Remove</button>
+    </ng-template>
+  </app-admin-data-table>
+</div>

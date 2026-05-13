@@ -1,0 +1,21 @@
+<div class="adm-page">
+  <h1 class="adm-page-title">Categories</h1>
+  <div class="adm-add-row">
+    <input type="text" placeholder="New category name" [ngModel]="newName()" (ngModelChange)="newName.set($event)" />
+    <button type="button" class="adm-btn-primary" (click)="add()">Add</button>
+  </div>
+  @if (editId() !== null) {
+    <div class="adm-edit-panel">
+      <span>Edit #{{ editId() }}</span>
+      <input type="text" [ngModel]="editName()" (ngModelChange)="editName.set($event)" />
+      <button type="button" class="adm-btn-primary" (click)="saveEdit()">Save</button>
+      <button type="button" (click)="cancelEdit()">Cancel</button>
+    </div>
+  }
+  <app-admin-data-table [columns]="cols" [rowSource]="rows()" [searchKeys]="['name']">
+    <ng-template #actions let-row>
+      <button type="button" class="adm-link" (click)="startEdit(row)">Edit</button>
+      <button type="button" class="adm-danger" (click)="deleteRow(row['id'])">Delete</button>
+    </ng-template>
+  </app-admin-data-table>
+</div>

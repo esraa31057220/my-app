@@ -1,0 +1,94 @@
+<div class="state-loading section" *ngIf="loading">Loading order…</div>
+<div class="section state-empty" *ngIf="error">⚠️ {{ error }}</div>
+
+<div class="track-page" *ngIf="!loading && !error && order">
+
+  <div class="page-hero">
+    <div class="hero-orb"></div>
+    <div class="page-hero-inner">
+      <p class="breadcrumb">
+        <a routerLink="/my-orders">My Orders</a>
+        <span>›</span>
+        <span>Tracking #{{ order.id }}</span>
+      </p>
+      <h1>Track Your Order</h1>
+    </div>
+  </div>
+
+  <div class="section track-body">
+
+    <div class="cancelled-banner" *ngIf="isCancelledState()">
+      ❌ This order has been cancelled.
+    </div>
+
+    <div class="track-grid">
+
+      <!-- Stepper -->
+      <div class="card track-card" *ngIf="!isCancelledState()">
+        <h3 class="track-card-title">📍 Order Progress</h3>
+
+        <div class="stepper">
+          <ng-container *ngFor="let step of steps; let i = index">
+            <div class="step-node"
+                 [class.reached]="isReached(step)"
+                 [class.current]="isCurrent(step)">
+              <div class="step-circle">{{ stepMeta[step].icon }}</div>
+              <div class="step-label">{{ stepMeta[step].label }}</div>
+              <div class="step-desc" *ngIf="isCurrent(step)">{{ stepMeta[step].desc }}</div>
+            </div>
+            <div class="step-line"
+                 [class.reached]="isReached(steps[i + 1])"
+                 *ngIf="i < steps.length - 1"></div>
+          </ng-container>
+        </div>
+      </div>
+
+      <!-- Details -->
+      <div class="track-right">
+        <div class="card track-card">
+          <h3 class="track-card-title">📦 Order #{{ order.id }}</h3>
+
+          <div class="info-row">
+            <span class="info-label">Address</span>
+            <span>{{ order.address }}, {{ order.city }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Phone</span>
+            <span>{{ order.phone }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Payment</span>
+            <span>{{ order.paymentMethod === 'cash' ? '💵 Cash' : '💳 Card' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Ordered</span>
+            <span>{{ order.createdAt | date:'mediumDate' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Total</span>
+            <span class="track-total">${{ (order.total ?? order.totalPrice) | number:'1.2-2' }}</span>
+          </div>
+        </div>
+
+        <div class="card track-card">
+          <h3 class="track-card-title">🛍️ {{ (order.items || []).length }} Items</h3>
+          <ul class="track-items">
+            <li *ngFor="let item of order.items || []" class="track-item">
+              <img [src]="item.thumbnail || ''" [alt]="item.title || item.productName" class="track-thumb" />
+              <div>
+                <p class="track-item-name">{{ item.title || item.productName }}</p>
+                <p class="track-item-meta">x{{ item.quantity }} · ${{ item.price | number:'1.2-2' }}</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <a routerLink="/my-orders" class="btn btn-outline"
+           style="display:block; text-align:center">
+          ← Back to My Orders
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>

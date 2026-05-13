@@ -1,0 +1,64 @@
+<div class="adm-toolbar">
+  <input
+    class="adm-search"
+    type="search"
+    placeholder="Search…"
+    [ngModel]="searchTerm()"
+    (ngModelChange)="searchTerm.set($event)"
+  />
+  <div class="adm-toolbar-right">
+    <label class="adm-label">
+      Per page
+      <select [ngModel]="pageSize()" (ngModelChange)="setPageSize(+$event)">
+        @for (opt of pageSizeOptions(); track opt) {
+          <option [ngValue]="opt">{{ opt }}</option>
+        }
+      </select>
+    </label>
+    <span class="adm-meta">{{ total() }} total</span>
+  </div>
+</div>
+
+<div class="adm-table-wrap">
+  <table class="adm-table">
+    <thead>
+      <tr>
+        @for (col of columns(); track col.key) {
+          <th>{{ col.label }}</th>
+        }
+        @if (actionsTpl()) {
+          <th class="col-actions"></th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of pagedRows(); track trackRow(i, row); let i = $index) {
+        <tr>
+          @for (col of columns(); track col.key) {
+            <td>{{ cell(row, col.key) }}</td>
+          }
+          @if (actionsTpl(); as tpl) {
+            <td class="col-actions">
+              <ng-container *ngTemplateOutlet="tpl; context: { $implicit: row }" />
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+<div class="adm-pager">
+  <button type="button" class="adm-btn" [disabled]="pageIndex() <= 0" (click)="prev()">
+    Previous
+  </button>
+  <span>Page {{ pageIndex() + 1 }} / {{ totalPages() }}</span>
+  <button
+    type="button"
+    class="adm-btn"
+    [disabled]="pageIndex() >= totalPages() - 1"
+    (click)="next()"
+  >
+    Next
+  </button>
+</div>

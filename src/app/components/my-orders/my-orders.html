@@ -1,0 +1,88 @@
+<div class="orders-page">
+  <div class="page-hero">
+    <div class="hero-orb"></div>
+    <div class="page-hero-inner">
+      <h1>My Orders</h1>
+      <p class="orders-hero-sub">Track and manage all your orders</p>
+    </div>
+  </div>
+
+  <div class="section orders-body">
+<div class="state-loading" *ngIf="ordersLoading">Loading your orders…</div>
+
+<div class="state-empty" *ngIf="!ordersLoading && ordersError">⚠️ {{ ordersError }}</div>
+
+<div class="orders-empty" *ngIf="!ordersLoading && !ordersError && orders.length === 0">
+      <div class="empty-icon-lg">🛍️</div>
+      <h3>No orders yet</h3>
+      <p>Looks like you haven't placed any orders.</p>
+      <a routerLink="/home" class="btn btn-primary">Start Shopping →</a>
+    </div>
+
+<div class="orders-list" *ngIf="!ordersLoading && !ordersError && orders.length > 0">
+      <div class="order-card card" *ngFor="let order of orders">
+
+        <div class="order-card-top">
+          <div class="order-id-wrap">
+            <span class="order-label">Order</span>
+            <span class="order-id">#{{ order.id }}</span>
+          </div>
+          <span class="tag" [ngClass]="statusClass(order.status)">
+            {{ statusIcon(order.status) }} {{ displayStatus(order.status) | titlecase }}
+          </span>
+        </div>
+
+        <!-- Thumbnail preview row -->
+        <div class="order-thumbs">
+          <img
+            *ngFor="let item of (order.items || []).slice(0, 4)"
+            [src]="item.thumbnail || ''"
+            [alt]="item.title || item.productName"
+            class="order-thumb"
+            [title]="item.title || item.productName"
+          />
+          <span class="order-more" *ngIf="(order.items || []).length > 4">
+            +{{ (order.items || []).length - 4 }}
+          </span>
+        </div>
+
+        <div class="order-card-footer">
+          <div class="order-meta">
+            <span class="meta-row">📅 {{ (order.createdAt ?? order.orderDate) | date:'mediumDate' }}</span>
+            <span class="meta-row">🛍️ {{ (order.items || []).length }} item{{ (order.items || []).length > 1 ? 's' : '' }}</span>
+            <span class="meta-row meta-total">${{ (order.total ?? order.totalPrice) | number:'1.2-2' }}</span>
+          </div>
+
+          <div class="order-admin-bar" *ngIf="isAdmin()">
+            <label class="order-admin-label" [attr.for]="'st-' + order.id">Update status</label>
+            <select
+              class="order-status-select"
+              [id]="'st-' + order.id"
+              (change)="onAdminStatusChange(order, $event)"
+              [disabled]="statusUpdatingId === order.id"
+            >
+              <option
+                *ngFor="let s of adminStatusOptions"
+                [value]="s"
+                [selected]="displayStatus(order.status) === s"
+              >
+                {{ s | titlecase }}
+              </option>
+            </select>
+          </div>
+
+          <div class="order-actions">
+            <a [routerLink]="['/order', order.id, 'tracking']"
+               [state]="{ order: order }"
+               class="btn btn-outline btn-sm">📍 Track</a>
+
+            <a [routerLink]="['/order', order.id, 'confirmation']"
+               [state]="{ order: order }"
+               class="btn btn-outline btn-sm">🧾 Details</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

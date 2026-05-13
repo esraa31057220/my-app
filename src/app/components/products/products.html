@@ -1,0 +1,88 @@
+<section class="products-section">
+  @if (loading) {
+    <div class="empty-state">
+      <i class="ti ti-loader" aria-hidden="true"></i>
+      <p>Loading products...</p>
+    </div>
+  } @else if (error) {
+    <div class="empty-state">
+      <i class="ti ti-alert-circle" aria-hidden="true"></i>
+      <p>{{ error }}</p>
+    </div>
+  } @else {
+    <div class="cards-grid">
+      @for (p of filteredProducts; track p.id) {
+        <div class="product-card" [class.out-of-stock]="p.stockQuantity === 0">
+          <!-- Image -->
+          <div class="card-image-wrapper">
+            <img
+              [src]="productImageUrl(p)"
+              [alt]="p.name"
+              class="card-image"
+              appZoomImage
+              [zoomScale]="1.15"
+            />
+            @if (p.stockQuantity === 0) {
+              <span class="card-badge">Out of stock</span>
+            }
+            <span class="card-category-tag">{{ p.categoryName }}</span>
+
+            <!-- Wishlist Heart Icon -->
+            <button
+              class="btn-favorite"
+              [class.is-favorite]="isInWishlist(p.id)"
+              (click)="toggleWishlist(p.id)"
+              [attr.aria-label]="isInWishlist(p.id) ? 'Remove from wishlist' : 'Add to wishlist'"
+            >
+              <i [class]="isInWishlist(p.id) ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>
+            </button>
+          </div>
+
+          <!-- Content -->
+          <div class="card-content">
+            <h3 class="card-title" [appHighLight]="true">{{ p.name }}</h3>
+            <p class="card-description">{{ p.description | truncateWords }}</p>
+
+            <!-- Admin actions -->
+            @if (isAdmin()) {
+              <div class="card-actions">
+                <button class="btn-edit" (click)="onEdit(p)">
+                  <i class="ti ti-edit" aria-hidden="true"></i> Edit
+                </button>
+                <button class="btn-delete" (click)="onDelete(p.id)">
+                  <i class="ti ti-trash" aria-hidden="true"></i> Delete
+                </button>
+              </div>
+            }
+
+            <!-- Cart button -->
+            @if (!isLoggedIn()) {
+              <button class="btn-login" (click)="goToLogin()">
+                <i class="ti ti-lock" aria-hidden="true"></i>
+                Sign in to add to cart
+              </button>
+            } @else {
+              <button class="btn-cart" (click)="onAddToCart(p)" [disabled]="p.stockQuantity === 0">
+                <i class="ti ti-shopping-bag" aria-hidden="true"></i>
+                {{ p.stockQuantity === 0 ? 'Out of stock' : 'Add to cart' }}
+              </button>
+            }
+
+            <!-- Footer -->
+            <div class="card-footer">
+              <span class="card-price">${{ p.price | decimal }}</span>
+              <span [class]="p.stockQuantity === 0 ? 'stock-empty' : 'stock-available'">
+                {{ p.stockQuantity === 0 ? 'Sold out' : p.stockQuantity + ' left' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      } @empty {
+        <div class="empty-state">
+          <i class="ti ti-mood-empty" aria-hidden="true"></i>
+          <p>No products found.</p>
+        </div>
+      }
+    </div>
+  }
+</section>

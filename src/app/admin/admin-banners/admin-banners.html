@@ -1,0 +1,18 @@
+<div class="adm-page">
+  <h1 class="adm-page-title">Homepage banners</h1>
+  <p class="adm-page-sub">Active banners appear on the storefront hero strip. API preferred; falls back to local storage.</p>
+  <div class="adm-form-grid">
+    <input type="text" placeholder="Title" [(ngModel)]="draft.title" />
+    <input type="url" placeholder="Image URL" [(ngModel)]="draft.imageUrl" />
+    <input type="url" placeholder="Optional link URL" [(ngModel)]="draft.linkUrl" />
+    <input type="number" placeholder="Sort order" [(ngModel)]="draft.sortOrder" />
+    <label class="adm-check"><input type="checkbox" [(ngModel)]="draft.active" /> Active</label>
+    <button type="button" class="adm-btn-primary" (click)="add()">Add banner</button>
+  </div>
+  <app-admin-data-table [columns]="cols" [rowSource]="rows()" [searchKeys]="['title', 'imageUrl']">
+    <ng-template #actions let-row>
+      <button type="button" class="adm-link" (click)="toggle(row)">Toggle</button>
+      <button type="button" class="adm-danger" (click)="remove(row['id'])">Remove</button>
+    </ng-template>
+  </app-admin-data-table>
+</div>

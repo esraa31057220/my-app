@@ -1,0 +1,108 @@
+<div class="auth-page">
+  <!-- LEFT PANEL — decorative (unchanged) -->
+  <div class="auth-panel">
+    <div class="panel-content">
+      <span class="panel-logo"> ShopHub</span>
+      <h2 class="panel-headline">Welcome back,<br /><em>shophub friend!</em></h2>
+      <p class="panel-sub">Your organic favourites are waiting for you.</p>
+    </div>
+    <div class="panel-tear"></div>
+  </div>
+
+  <!-- RIGHT PANEL — form -->
+  <div class="auth-form-side">
+    <div class="auth-card">
+      <div class="auth-card-header">
+        <h1 class="auth-title">Sign in</h1>
+        <p class="auth-subtitle">Enter your credentials to continue shopping</p>
+      </div>
+
+      <!-- error message -->
+      <div class="auth-error" *ngIf="errorMsg">
+        <span>⚠️</span> {{ errorMsg }}
+
+        <!-- 👇 Show register link only when no account found -->
+        <a *ngIf="errorMsg.includes('register')" routerLink="/register" class="auth-error-link">
+          Create account →
+        </a>
+      </div>
+
+      <!-- 👇 [formGroup] wraps the whole form -->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="auth-fields">
+          <!-- Email -->
+          <div class="field-group">
+            <label class="field-label" for="email">Email address</label>
+            <div class="field-wrap">
+              <span class="field-icon">✉️</span>
+              <input
+                id="email"
+                type="email"
+                class="field-input"
+                placeholder="you@example.com"
+                formControlName="email"
+                autocomplete="email"
+              />
+            </div>
+            <!-- Errors -->
+            <span class="field-error" *ngIf="f['email'].invalid && f['email'].touched">
+              <ng-container *ngIf="f['email'].errors?.['required']">
+                Email is required
+              </ng-container>
+              <ng-container *ngIf="f['email'].errors?.['email']">
+                Enter a valid email address
+              </ng-container>
+            </span>
+          </div>
+
+          <!-- Password -->
+          <div class="field-group">
+            <div class="field-label-row">
+              <label class="field-label" for="password">Password</label>
+              <a href="#" class="field-forgot">Forgot password?</a>
+            </div>
+            <div class="field-wrap">
+              <span class="field-icon">🔒</span>
+              <input
+                id="password"
+                [type]="showPass ? 'text' : 'password'"
+                class="field-input"
+                placeholder="••••••••"
+                formControlName="password"
+                autocomplete="current-password"
+              />
+              <button
+                type="button"
+                class="field-toggle"
+                (click)="showPass = !showPass"
+                [attr.aria-label]="showPass ? 'Hide password' : 'Show password'"
+              >
+                {{ showPass ? '🙈' : '👁️' }}
+              </button>
+            </div>
+            <!-- Errors -->
+            <span class="field-error" *ngIf="f['password'].invalid && f['password'].touched">
+              <ng-container *ngIf="f['password'].errors?.['required']">
+                Password is required
+              </ng-container>
+              <ng-container *ngIf="f['password'].errors?.['minlength']">
+                Password must be at least 8 characters
+              </ng-container>
+            </span>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="btn-submit" [disabled]="loginForm.invalid">
+            Sign in &nbsp;→
+          </button>
+        </div>
+      </form>
+
+      <div class="auth-divider"><span>or</span></div>
+      <p class="auth-switch">
+        Don't have an account?
+        <a routerLink="/register" class="auth-switch-link">Create one free →</a>
+      </p>
+    </div>
+  </div>
+</div>

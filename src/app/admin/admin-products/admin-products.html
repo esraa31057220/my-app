@@ -1,0 +1,22 @@
+<div class="adm-page">
+  <h1 class="adm-page-title">Products</h1>
+  <p class="adm-page-sub">Search uses the catalog API (<code>Search</code> query). Table paging is client-side on the result set.</p>
+  <label class="adm-api-search">
+    API search
+    <input
+      type="search"
+      [ngModel]="apiSearch()"
+      (ngModelChange)="onSearchInput($event)"
+      placeholder="Name or description…"
+    />
+  </label>
+  @if (loading()) {
+    <p class="adm-page-sub">Loading…</p>
+  } @else {
+    <app-admin-data-table [columns]="cols" [rowSource]="rows()" [searchKeys]="['name', 'categoryName']">
+      <ng-template #actions let-row>
+        <button type="button" class="adm-danger" (click)="deleteProduct(row['id'])">Delete</button>
+      </ng-template>
+    </app-admin-data-table>
+  }
+</div>

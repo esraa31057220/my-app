@@ -1,0 +1,9 @@
+<button
+  class="btn"
+  [ngClass]="'btn-' + color"
+  [style.width]="width"
+  [style.height]="height"
+  (click)="onClick()"
+>
+  {{ title }}
+</button>

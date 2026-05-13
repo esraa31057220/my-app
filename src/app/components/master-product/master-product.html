@@ -1,0 +1,244 @@
+<div class="master-products-page">
+  <!-- ── FILTER BAR ── -->
+  <div class="filter-bar-wrap">
+    <p class="filter-bar-label">Browse by Filter</p>
+
+    <div class="filter-bar-row">
+      <!-- ── LEFT: pill toggles ── -->
+      <div class="filter-bar">
+        <!-- Category toggle -->
+        <div class="filter-pill-group">
+          <button
+            class="filter-pill"
+            [class.active]="catOpen"
+            (click)="catOpen = !catOpen; priceOpen = false"
+          >
+            <i class="ti ti-tag" aria-hidden="true"></i>
+            Category
+            <span *ngIf="selectedCategory !== 'All'" class="filter-badge">
+              {{ selectedCategory }}
+            </span>
+            <i class="ti ti-chevron-down chev" aria-hidden="true"></i>
+          </button>
+          <div class="filter-panel" *ngIf="catOpen">
+            <p class="panel-label">Category</p>
+            <div class="cat-list">
+              <div
+                class="cat-item"
+                [class.sel]="selectedCategory === 'All'"
+                (click)="selectCategoryAll()"
+              >
+                <span class="dot"></span> All
+              </div>
+              @if (categoriesLoading) {
+                <div class="cat-item cat-item--muted">Loading categories…</div>
+              } @else if (categoriesError) {
+                <div class="cat-item cat-item--muted">{{ categoriesError }}</div>
+              } @else {
+                <div
+                  class="cat-item"
+                  *ngFor="let cat of catList"
+                  [class.sel]="selectedCategory === cat.name"
+                  (click)="selectCategory(cat)"
+                >
+                  <span class="dot"></span> {{ cat.name }}
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="pill-divider"></div>
+
+        <!-- Price toggle -->
+        <div class="filter-pill-group">
+          <button
+            class="filter-pill"
+            [class.active]="priceOpen"
+            (click)="priceOpen = !priceOpen; catOpen = false"
+          >
+            <i class="ti ti-currency-dollar" aria-hidden="true"></i>
+            Price
+            <span *ngIf="maxPrice < 1000" class="filter-badge">
+              ≤ {{ maxPrice | currency: 'USD' : 'symbol' : '1.0-0' }}
+            </span>
+            <i class="ti ti-chevron-down chev" aria-hidden="true"></i>
+          </button>
+          <div class="filter-panel price-panel" *ngIf="priceOpen">
+            <p class="panel-label">Max Price</p>
+            <div class="price-row">
+              <span class="price-sub">Up to</span>
+              <span class="price-val">{{ maxPrice | currency: 'USD' : 'symbol' : '1.0-0' }}</span>
+            </div>
+            <input type="range" min="1" max="1000" step="1" [(ngModel)]="maxPrice" />
+            <div class="price-minmax"><span>$1</span><span>$1,000</span></div>
+            <button class="panel-reset" (click)="maxPrice = 1000">
+              <i class="ti ti-refresh" aria-hidden="true"></i> Reset price
+            </button>
+          </div>
+        </div>
+
+        <!-- Clear all -->
+        <button class="filter-reset-all" *ngIf="hasActiveFilters" (click)="clearAll()">
+          <i class="ti ti-x" aria-hidden="true"></i> Clear all
+        </button>
+      </div>
+
+      <!-- ── RIGHT: search bar ── -->
+      @if (isLoggedIn()) {
+        <div class="nav-search">
+          <input type="text" placeholder="Search products..." [(ngModel)]="searchQuery" />
+          <button class="nav-search-btn" aria-label="Search">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
+            </svg>
+          </button>
+          <button
+            class="nav-search-clear"
+            *ngIf="searchQuery"
+            (click)="searchQuery = ''"
+            aria-label="Clear search"
+          >
+            <i class="ti ti-x"></i>
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- ── TOOLBAR ── -->
+  <div class="toolbar">
+    <div class="toolbar-left">
+      @if (isAdmin()) {
+        <button class="add-product-btn" (click)="addProduct()">
+          <i class="ti ti-plus" aria-hidden="true"></i> Add Product
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- ── PRODUCT FORM ── -->
+  <div *ngIf="currentProduct.id !== 0 || isEditMode" class="form-card">
+    <div class="form-card-header">
+      <h5>{{ isEditMode ? 'Edit Product' : 'Add New Product' }}</h5>
+    </div>
+    <div class="form-card-body">
+      <form #productForm="ngForm">
+        <div class="form-grid">
+          <!-- LEFT COLUMN -->
+          <div>
+            <div class="form-group">
+              <label for="name" class="form-label">Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="name"
+                [(ngModel)]="currentProduct.name"
+                name="name"
+                placeholder="Product name"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="description" class="form-label">Description</label>
+              <textarea
+                class="form-control"
+                id="description"
+                [(ngModel)]="currentProduct.description"
+                name="description"
+                placeholder="Short description"
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label for="categoryId" class="form-label">Category</label>
+              <select
+                class="form-select"
+                id="categoryId"
+                [(ngModel)]="currentProduct.categoryId"
+                name="categoryId"
+              >
+                <option *ngFor="let cat of catList" [value]="cat.id">{{ cat.name }}</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- RIGHT COLUMN -->
+          <div>
+            <div class="form-group">
+              <label for="price" class="form-label">Price</label>
+              <input
+                type="number"
+                class="form-control"
+                id="price"
+                [(ngModel)]="currentProduct.price"
+                name="price"
+                placeholder="0.00"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="stockQuantity" class="form-label">Stock</label>
+              <input
+                type="number"
+                class="form-control"
+                id="stockQuantity"
+                [(ngModel)]="currentProduct.stockQuantity"
+                name="stockQuantity"
+                placeholder="0"
+              />
+            </div>
+            <div class="form-group">
+              <label for="image" class="form-label">Product Image</label>
+              <input
+                type="file"
+                class="form-control"
+                id="image"
+                name="image"
+                accept="image/*"
+                (change)="onImageSelected($event)"
+              />
+              @if (currentProduct.image && !selectedImageFile) {
+                <img [src]="currentProduct.image" alt="Current image" class="img-preview" />
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Save error -->
+        @if (saveError) {
+          <p class="form-error">{{ saveError }}</p>
+        }
+
+        <!-- FORM ACTIONS -->
+        <div class="form-actions">
+          <button
+            type="button"
+            class="btn-save"
+            (click)="saveProduct()"
+            [disabled]="!productForm.valid || saving"
+          >
+            <i class="ti ti-device-floppy" aria-hidden="true"></i>
+            {{ saving ? 'Saving...' : 'Save' }}
+          </button>
+          <button type="button" class="btn-cancel" (click)="cancelEdit()">
+            <i class="ti ti-x" aria-hidden="true"></i> Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── CHILD PRODUCTS COMPONENT ── -->
+  <app-products
+    [selectedCategory]="selectedCategory"
+    [selectedCategoryId]="selectedCategoryId"
+    [maxPrice]="maxPrice"
+    (totalPrice)="RecievedTotalPrice($event)"
+    (editProduct)="editProduct($event)"
+    (deleteProduct)="deleteProduct($event)"
+    [searchQuery]="searchQuery"
+  >
+  </app-products>
+</div>

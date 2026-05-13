@@ -1,0 +1,43 @@
+/* ═══════════════════════════════════════════════
+   FreshBasket — Enhanced Stylesheet
+   Palette: #002237 · #F37500 · #FDE9C4
+   ═══════════════════════════════════════════════ */
+ 
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap');
+ 
+/* ── TOKENS ─────────────────────────────────── */
+:root {
+  --navy:        #002237;
+  --navy-mid:    #003452;
+  --navy-light:  #0a4a6e;
+  --orange:      #F37500;
+  --orange-dark: #d46300;
+  --orange-glow: rgba(243, 117, 0, 0.18);
+  --cream:       #FDE9C4;
+  --cream-soft:  #fef5e7;
+  --white:       #ffffff;
+  --text-muted:  #8fa8b8;
+ 
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+ 
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  20px;
+  --radius-xl:  28px;
+ 
+  --shadow-card: 0 2px 12px rgba(0,34,55,0.10), 0 1px 3px rgba(0,34,55,0.06);
+  --shadow-hover: 0 16px 48px rgba(0,34,55,0.18), 0 4px 12px rgba(243,117,0,0.12);
+  --shadow-btn:  0 4px 16px rgba(243,117,0,0.35);
+ 
+  --transition: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+ 
+* { box-sizing: border-box; }
+ 
+body {
+  font-family: var(--font-body);
+  background: var(--cream-soft);
+  color: var(--navy);
+  -webkit-font-smoothing: antialiased;
+}

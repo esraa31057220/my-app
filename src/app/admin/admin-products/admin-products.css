@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=DM+Sans:wght@400;500&display=swap');
+
+.adm-page {
+  font-family: 'DM Sans', sans-serif;
+  max-width: 1000px;
+}
+
+.adm-page-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  margin: 0 0 8px;
+}
+
+.adm-page-sub {
+  font-size: 13px;
+  color: #666;
+  margin: 0 0 1rem;
+}
+
+.adm-api-search {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: #444;
+  margin-bottom: 1rem;
+  max-width: 400px;
+}
+
+.adm-api-search input {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 0.5px solid #e0e0e0;
+}
+
+.adm-danger {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 0.5px solid #fcc;
+  background: #fff;
+  color: #c0392b;
+  cursor: pointer;
+  font-size: 12px;
+}

@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=DM+Sans:wght@400;500&display=swap');
+
+.dash-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  margin: 0 0 1.5rem;
+}
+
+.dash-muted {
+  color: #888;
+  font-size: 14px;
+}
+
+.dash-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 2rem;
+}
+
+.dash-card {
+  background: #fff;
+  border: 0.5px solid #e5e5e5;
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.dash-label {
+  font-size: 12px;
+  color: #888;
+  margin: 0 0 4px;
+}
+
+.dash-value {
+  font-size: 22px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.dash-blocks {
+  display: grid;
+  gap: 1rem;
+}
+
+.dash-block {
+  background: #fff;
+  border: 0.5px solid #e5e5e5;
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.dash-block h2 {
+  font-size: 15px;
+  margin: 0 0 8px;
+}
+
+.dash-pre {
+  margin: 0;
+  font-size: 12px;
+  overflow: auto;
+  max-height: 200px;
+  background: #f9f9f9;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.dash {
+  font-family: 'DM Sans', sans-serif;
+  max-width: 960px;
+}

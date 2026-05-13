@@ -1,0 +1,15 @@
+{
+  "version": "1.0",
+  "name": "my-app",
+  "settings": {
+    "autoRun": false,
+    "watch": false,
+    "logLevel": "info"
+  },
+  "tasks": [],
+  "ignore": [
+    "node_modules",
+    "dist",
+    ".git"
+  ]
+}

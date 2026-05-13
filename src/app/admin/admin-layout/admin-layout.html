@@ -1,0 +1,18 @@
+<div class="admin-shell">
+  <aside class="admin-sidebar">
+    <p class="admin-brand">Admin</p>
+    <nav class="admin-nav">
+      <a routerLink="/admin/dashboard" routerLinkActive="active">Dashboard</a>
+      <a routerLink="/admin/users" routerLinkActive="active">Users</a>
+      <a routerLink="/admin/products" routerLinkActive="active">Products</a>
+      <a routerLink="/admin/categories" routerLinkActive="active">Categories</a>
+      <a routerLink="/admin/orders" routerLinkActive="active">Orders</a>
+      <a routerLink="/admin/promos" routerLinkActive="active">Promo codes</a>
+      <a routerLink="/admin/banners" routerLinkActive="active">Homepage CMS</a>
+    </nav>
+    <a routerLink="/home" class="admin-back">← Storefront</a>
+  </aside>
+  <main class="admin-main">
+    <router-outlet />
+  </main>
+</div>

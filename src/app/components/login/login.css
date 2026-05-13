@@ -1,0 +1,309 @@
+/* ═══════════════════════════════════════════
+   FreshBasket — login.css  (light, simple)
+   ═══════════════════════════════════════════ */
+
+/* ── Page shell ── */
+.auth-page {
+  display: flex;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  background: #f5f3f8;
+}
+
+/* ════════════════════════
+   LEFT — PANEL SIDE
+════════════════════════ */
+.auth-panel {
+  flex: 0 0 42%;
+  background: linear-gradient(155deg, #1a0640 0%, #2d0f6e 55%, #3a0a8c 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Dot grid */
+.auth-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,.05) 1px, transparent 1px);
+  background-size: 26px 26px;
+  pointer-events: none;
+}
+
+.panel-content {
+  position: relative;
+  z-index: 1;
+  padding: 48px 52px;
+  max-width: 380px;
+}
+
+.panel-logo {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #c084fc;
+  margin-bottom: 32px;
+}
+
+.panel-headline {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.8rem, 2.8vw, 2.4rem);
+  line-height: 1.15;
+  text-transform: uppercase;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.panel-headline em {
+  font-style: normal;
+  color: #c084fc;
+}
+
+.panel-sub {
+  font-size: .9rem;
+  color: #d8b4fe;
+  line-height: 1.6;
+}
+
+/* Torn edge */
+.panel-tear {
+  position: absolute;
+  right: -1px;
+  top: 0; bottom: 0;
+  width: 36px;
+  background: #f5f3f8;
+  clip-path: polygon(100% 0, 0 3%, 0 10%, 100% 14%, 0 22%, 0 30%, 100% 36%, 0 44%, 0 52%, 100% 58%, 0 66%, 0 74%, 100% 80%, 0 88%, 0 96%, 100% 100%);
+  z-index: 2;
+}
+
+/* ════════════════════════
+   RIGHT — FORM SIDE
+════════════════════════ */
+.auth-form-side {
+  flex: 1 1 58%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 5vw;
+}
+
+/* ── Card ── */
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  border: 1px solid #e8e2f0;
+  border-radius: var(--radius-card);
+  padding: 40px 36px 32px;
+}
+
+/* ── Header ── */
+.auth-card-header {
+  margin-bottom: 24px;
+}
+
+.auth-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.9rem;
+  text-transform: uppercase;
+  color: #1a0640;
+  margin-bottom: 4px;
+}
+
+.auth-subtitle {
+  font-size: .87rem;
+  color: #7c6e9a;
+}
+
+/* ── Error banner ── */
+.auth-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff5f5;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-md);
+  color: #dc2626;
+  font-size: .85rem;
+  font-weight: 600;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+}
+
+.auth-error-link {
+  margin-left: auto;
+  color: #9333ea;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* ════════════════════════
+   FIELDS
+════════════════════════ */
+.auth-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.field-label {
+  font-size: .79rem;
+  font-weight: 700;
+  color: #3b2060;
+  letter-spacing: .3px;
+  text-transform: uppercase;
+}
+
+/* Label row with forgot link */
+.field-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1px;
+}
+
+.field-forgot {
+  font-size: .78rem;
+  font-weight: 600;
+  color: #9333ea;
+  text-decoration: none;
+  transition: opacity var(--dur-fast);
+}
+
+.field-forgot:hover { opacity: .75; }
+
+.field-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.field-icon {
+  position: absolute;
+  left: 12px;
+  font-size: .88rem;
+  pointer-events: none;
+}
+
+.field-input {
+  width: 100%;
+  background: #faf9fc;
+  border: 1.5px solid #ddd6f0;
+  border-radius: var(--radius-md);
+  padding: 10px 40px 10px 38px;
+  font-family: var(--font-body);
+  font-size: .92rem;
+  color: #1a0640;
+  outline: none;
+  transition: border-color var(--dur-fast), box-shadow var(--dur-fast);
+}
+
+.field-input:focus {
+  border-color: #9333ea;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(147,51,234,.10);
+}
+
+.field-input::placeholder { color: #b0a0cc; }
+
+/* Show/hide toggle */
+.field-toggle {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: .9rem;
+  color: #b0a0cc;
+  padding: 4px;
+}
+
+.field-toggle:hover { color: #9333ea; }
+
+/* Error text */
+.field-error {
+  font-size: .77rem;
+  font-weight: 600;
+  color: #dc2626;
+}
+
+/* ════════════════════════
+   SUBMIT BUTTON
+════════════════════════ */
+.btn-submit {
+  width: 100%;
+  background: linear-gradient(135deg, #d946ef 0%, #9333ea 100%);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: .95rem;
+  font-weight: 700;
+  padding: 12px;
+  border-radius: var(--radius-pill);
+  border: none;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: opacity var(--dur-fast), transform var(--dur-fast);
+}
+
+.btn-submit:hover  { opacity: .88; transform: translateY(-1px); }
+.btn-submit:active { transform: translateY(0); }
+.btn-submit:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+
+/* ── Divider ── */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 22px 0 16px;
+  color: #b0a0cc;
+  font-size: .8rem;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #ede9f6;
+}
+
+/* ── Switch ── */
+.auth-switch {
+  text-align: center;
+  font-size: .87rem;
+  color: #7c6e9a;
+}
+
+.auth-switch-link {
+  color: #9333ea;
+  font-weight: 700;
+  margin-left: 4px;
+}
+
+/* ════════════════════════
+   RESPONSIVE
+════════════════════════ */
+@media (max-width: 900px) {
+  .auth-panel { display: none; }
+  .auth-page  { background: #f5f3f8; }
+  .auth-form-side { justify-content: center; }
+}
+
+@media (max-width: 480px) {
+  .auth-card  { padding: 28px 20px 24px; }
+  .auth-title { font-size: 1.5rem; }
+}

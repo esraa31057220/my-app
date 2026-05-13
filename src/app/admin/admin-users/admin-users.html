@@ -1,0 +1,57 @@
+<div class="users-container">
+  <div class="page-header">
+    <h1 class="page-title">Users</h1>
+    <span class="page-count">{{ tableRows().length }} visible</span>
+  </div>
+
+  <label class="adm-inline-check">
+    <input type="checkbox" [ngModel]="showDeleted()" (ngModelChange)="showDeleted.set($event)" />
+    Show hidden (soft-deleted)
+  </label>
+
+  <div class="form-card">
+    <p class="form-title">{{ isEditing ? 'Edit user' : 'Add user' }}</p>
+    <div class="form-grid">
+      <input [(ngModel)]="formUser.firstName" placeholder="First name" />
+      <input [(ngModel)]="formUser.lastName" placeholder="Last name" />
+      <input [(ngModel)]="formUser.email" placeholder="Email address" />
+      <select [(ngModel)]="formUser.role" class="full-width">
+        <option value="Customer">Customer</option>
+        <option value="Seller">Seller</option>
+        <option value="Admin">Admin</option>
+      </select>
+      <input [(ngModel)]="formUser.password" placeholder="Password" type="password" />
+    </div>
+    <div class="form-actions">
+      <button type="button" class="btn-primary" (click)="onSubmit()">
+        {{ isEditing ? 'Update' : 'Add user' }}
+      </button>
+      @if (isEditing) {
+        <button type="button" class="btn-cancel" (click)="resetForm()">Cancel</button>
+      }
+    </div>
+  </div>
+
+  @if (loading()) {
+    <p class="adm-note">Loading…</p>
+  } @else {
+    <app-admin-data-table [columns]="cols" [rowSource]="tableRows()" [searchKeys]="['firstName', 'lastName', 'email', 'role']">
+      <ng-template #actions let-row>
+        <div class="row-actions">
+          <button type="button" class="btn-edit" (click)="editFromRow(row)" title="Edit">
+            ✎
+          </button>
+          <button type="button" class="btn-edit" (click)="toggleRestrict(row)" title="Restrict">
+            R
+          </button>
+          <button type="button" class="btn-edit" (click)="toggleSoftDelete(row)" title="Hide">
+            H
+          </button>
+          <button type="button" class="btn-delete" (click)="deleteUserApi(row['id'])" title="Delete API">
+            ×
+          </button>
+        </div>
+      </ng-template>
+    </app-admin-data-table>
+  }
+</div>

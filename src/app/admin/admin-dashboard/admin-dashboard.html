@@ -1,0 +1,39 @@
+<div class="dash">
+  <h1 class="dash-title">Dashboard</h1>
+  @if (loading()) {
+    <p class="dash-muted">Loading statistics…</p>
+  } @else {
+    <div class="dash-grid">
+      <div class="dash-card">
+        <p class="dash-label">Users</p>
+        <p class="dash-value">{{ userCount() }}</p>
+      </div>
+      <div class="dash-card">
+        <p class="dash-label">Orders</p>
+        <p class="dash-value">{{ orderCount() }}</p>
+      </div>
+      <div class="dash-card">
+        <p class="dash-label">Products</p>
+        <p class="dash-value">{{ productCount() }}</p>
+      </div>
+      <div class="dash-card">
+        <p class="dash-label">Categories</p>
+        <p class="dash-value">{{ categoryCount() }}</p>
+      </div>
+    </div>
+    <div class="dash-blocks">
+      <div class="dash-block">
+        <h2>Sales status</h2>
+        <pre class="dash-pre">{{ salesSnapshot() | json }}</pre>
+      </div>
+      <div class="dash-block">
+        <h2>Low stock</h2>
+        <pre class="dash-pre">{{ lowStock() | json }}</pre>
+      </div>
+      <div class="dash-block">
+        <h2>Top selling</h2>
+        <pre class="dash-pre">{{ topSelling() | json }}</pre>
+      </div>
+    </div>
+  }
+</div>
