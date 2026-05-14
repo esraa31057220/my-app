@@ -26,16 +26,30 @@ function asRecord(raw: unknown): Record<string, unknown> {
   return raw && typeof raw === 'object' ? (raw as Record<string, unknown>) : {};
 }
 
+/** Resolve a possibly-relative backend image path to an absolute URL the browser can load. */
+function resolveProductImage(raw: string | undefined): string | undefined {
+  const r = raw?.trim();
+  if (!r) return undefined;
+  if (/^https?:\/\//i.test(r) || r.startsWith('data:')) return r;
+  const env = environment as { apiUrl: string; apiServerOrigin?: string };
+  const base = env.apiUrl.startsWith('http')
+    ? env.apiUrl.replace(/\/api\/?$/, '')
+    : (env.apiServerOrigin ?? '').replace(/\/$/, '');
+  if (!base) return r.startsWith('/') ? r : `/${r}`;
+  return r.startsWith('/') ? `${base}${r}` : `${base}/${r}`;
+}
+
 function normalizeProduct(raw: unknown): IProduct {
   const o = asRecord(raw);
 
-  const imagePath = pick<string>(o, [
+  const rawImage = pick<string>(o, [
     'imagePath', 'ImagePath',
     'image', 'Image',
     'imageUrl', 'ImageUrl',
     'thumbnail', 'Thumbnail',
     'photo', 'Photo',
   ]);
+  const imagePath = resolveProductImage(rawImage);
 
   return {
     id: Number(pick(o, ['id', 'Id', 'productId', 'ProductId']) ?? 0),

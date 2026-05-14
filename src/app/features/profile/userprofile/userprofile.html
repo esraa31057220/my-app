@@ -160,7 +160,7 @@
             <div class="list-item order-item" *ngFor="let order of userOrders">
               <div class="item-header">
                 <span class="item-id">Order #{{ order.id }}</span>
-                <span class="item-status" [attr.data-status]="order.status">{{ order.status }}</span>
+                <span class="item-status" [attr.data-status]="order.status">{{ order.status | titlecase }}</span>
               </div>
               <div class="item-details">
                 <p>Placed on: {{ order.orderDate | date:'mediumDate' }}</p>
