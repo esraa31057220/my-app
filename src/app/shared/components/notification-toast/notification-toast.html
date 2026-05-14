@@ -1,0 +1,19 @@
+@if (toasts().length > 0) {
+  <div class="toast-stack" role="region" aria-live="polite" aria-label="Notifications">
+    @for (toast of toasts(); track toast.id) {
+      <article class="toast card" [attr.data-tone]="toast.tone">
+        <span class="toast-icon">{{ toast.icon }}</span>
+        <div class="toast-body">
+          <p class="toast-title">{{ toast.title }}</p>
+          <p class="toast-msg">{{ toast.body }}</p>
+        </div>
+        <button
+          type="button"
+          class="toast-close"
+          aria-label="Dismiss notification"
+          (click)="dismiss(toast.id)"
+        >×</button>
+      </article>
+    }
+  </div>
+}

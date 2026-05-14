@@ -77,6 +77,24 @@
           <a routerLink="/home" class="btn btn-outline">🏠 Continue Shopping</a>
         </div>
 
+        <div class="card conf-card conf-share-card">
+          <h3 class="conf-card-title">📣 Share Your Purchase</h3>
+          <p class="conf-share-sub">Let your friends know what you got.</p>
+          <div class="conf-share-actions">
+            @if (shareSupported) {
+              <button type="button" class="btn btn-outline btn-sm" (click)="shareNative()">
+                📤 Share…
+              </button>
+            }
+            <a class="btn btn-outline btn-sm" [href]="shareTwitter()" target="_blank" rel="noopener noreferrer">🐦 Twitter</a>
+            <a class="btn btn-outline btn-sm" [href]="shareFacebook()" target="_blank" rel="noopener noreferrer">📘 Facebook</a>
+            <a class="btn btn-outline btn-sm" [href]="shareWhatsApp()" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
+            <button type="button" class="btn btn-outline btn-sm" (click)="copyLink()">
+              {{ copied() ? '✅ Copied!' : '🔗 Copy link' }}
+            </button>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>

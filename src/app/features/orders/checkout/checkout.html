@@ -94,18 +94,49 @@
             </li>
           </ul>
 
+          <div class="promo-row">
+            <label class="field-label" for="promo-input">Promo code</label>
+            @if (!appliedPromo()) {
+              <div class="promo-wrap">
+                <input
+                  id="promo-input"
+                  class="field-input promo-input"
+                  type="text"
+                  placeholder="Enter code"
+                  [ngModel]="promoInput()"
+                  (ngModelChange)="promoInput.set($event)"
+                />
+                <button type="button" class="btn btn-outline btn-sm" (click)="applyPromo()">Apply</button>
+              </div>
+              @if (promoError()) {
+                <span class="field-error">{{ promoError() }}</span>
+              }
+            } @else {
+              <div class="promo-applied">
+                <span class="tag tag--green">{{ appliedPromo()?.code }} — {{ appliedPromo()?.discountPercent }}% off</span>
+                <button type="button" class="btn btn-outline btn-sm" (click)="clearPromo()">Remove</button>
+              </div>
+            }
+          </div>
+
           <div class="summary-totals">
             <div class="total-row">
               <span>Subtotal</span>
               <span>${{ total | number:'1.2-2' }}</span>
             </div>
+            @if (appliedPromo()) {
+              <div class="total-row total-discount">
+                <span>Promo discount</span>
+                <span>-${{ discount() | number:'1.2-2' }}</span>
+              </div>
+            }
             <div class="total-row">
               <span>Shipping</span>
               <span style="color: var(--clr-green, #4ade80)">Free</span>
             </div>
             <div class="total-row total-final">
               <span>Total</span>
-              <span>${{ total | number:'1.2-2' }}</span>
+              <span>${{ grandTotal() | number:'1.2-2' }}</span>
             </div>
           </div>
         </div>

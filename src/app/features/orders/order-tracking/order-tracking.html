@@ -25,7 +25,17 @@
 
       <!-- Stepper -->
       <div class="card track-card" *ngIf="!isCancelledState()">
-        <h3 class="track-card-title">📍 Order Progress</h3>
+        <div class="track-card-header">
+          <h3 class="track-card-title">📍 Order Progress</h3>
+          @if (isLiveTracking()) {
+            <span class="tag tag--green track-live">
+              <span class="track-live-dot"></span> Live
+            </span>
+          }
+        </div>
+        @if (lastChecked) {
+          <p class="track-last-checked">Last refreshed {{ lastChecked | date:'shortTime' }}</p>
+        }
 
         <div class="stepper">
           <ng-container *ngFor="let step of steps; let i = index">

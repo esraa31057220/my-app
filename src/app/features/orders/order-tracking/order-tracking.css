@@ -45,6 +45,51 @@
   border-bottom: 1px solid var(--clr-border);
 }
 
+.track-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--clr-border);
+}
+
+.track-card-header .track-card-title {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.track-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.track-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: #16a34a;
+  box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.6);
+  animation: track-live-pulse 1.6s ease-out infinite;
+}
+
+@keyframes track-live-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.6); }
+  70%  { box-shadow: 0 0 0 8px rgba(22, 163, 74, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+}
+
+.track-last-checked {
+  margin: 0 0 var(--space-md);
+  font-size: 0.75rem;
+  color: var(--clr-muted);
+}
+
 /* ── Info rows ─────────────────────────────── */
 .info-row {
   display: flex;
