@@ -1,11 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, of, throwError } from 'rxjs';
+import { forkJoin, Observable, of, throwError } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { CheckoutResponse, Order } from '../../models';
 import { IOrder, IOrderLineItem, OrderStatus } from '../../models/iorder';
+import { IProduct } from '../../models/iproduct';
 import { OrderNotificationService } from './order-notification.service';
+import { ProductService } from './product.service';
 
 export interface PlaceOrderMeta {
   address: string;
@@ -27,6 +29,7 @@ export interface PlaceOrderMeta {
 export class OrderService {
   private readonly http = inject(HttpClient);
   private readonly notifications = inject(OrderNotificationService);
+  private readonly products = inject(ProductService);
   private readonly ordersUrl = `${environment.apiUrl}/Orders`;
   private readonly adminUrl = `${environment.apiUrl}/Admin`;
 
@@ -52,15 +55,58 @@ export class OrderService {
   }
 
   getMyOrdersExtended(): Observable<IOrder[]> {
-    return this.http
-      .get<unknown>(`${this.ordersUrl}/My-Orders`)
-      .pipe(map((raw) => this.normalizeOrderList(this.asOrderArray(raw))));
+    return this.enrichOrdersWithProductImages(
+      this.http
+        .get<unknown>(`${this.ordersUrl}/My-Orders`)
+        .pipe(map((raw) => this.normalizeOrderList(this.asOrderArray(raw))))
+    );
   }
 
   getAllOrders(): Observable<IOrder[]> {
-    return this.http
-      .get<unknown>(`${this.adminUrl}/AllOrders`)
-      .pipe(map((raw) => this.normalizeOrderList(this.asOrderArray(raw))));
+    return this.enrichOrdersWithProductImages(
+      this.http
+        .get<unknown>(`${this.adminUrl}/AllOrders`)
+        .pipe(map((raw) => this.normalizeOrderList(this.asOrderArray(raw))))
+    );
+  }
+
+  /**
+   * The backend's order endpoints only return productId/productName/quantity/price
+   * — no image. Join each order line against the products catalog so the UI can
+   * render thumbnails on /my-orders, /order/:id/tracking and /order/:id/confirmation.
+   */
+  private enrichOrdersWithProductImages(orders$: Observable<IOrder[]>): Observable<IOrder[]> {
+    return forkJoin({
+      orders: orders$,
+      products: this.products.getProducts().pipe(catchError(() => of<IProduct[]>([]))),
+    }).pipe(
+      map(({ orders, products }) => {
+        if (!products.length) return orders;
+        const byId = new Map<number, IProduct>();
+        for (const p of products) byId.set(Number(p.id), p);
+        return orders.map((order) => ({
+          ...order,
+          items: (order.items ?? []).map((item) => ({
+            ...item,
+            thumbnail: item.thumbnail || this.productImageUrl(byId.get(Number(item.productId))?.image),
+          })),
+        }));
+      })
+    );
+  }
+
+  private productImageUrl(raw: string | undefined): string {
+    const r = raw?.trim();
+    if (!r) return '';
+    if (/^https?:\/\//i.test(r)) return r;
+    const env = environment as { apiUrl: string; apiServerOrigin?: string };
+    const base = env.apiUrl.startsWith('http')
+      ? env.apiUrl.replace(/\/api\/?$/, '')
+      : (env.apiServerOrigin ?? '').replace(/\/$/, '');
+    if (!base) {
+      return r.startsWith('/') ? r : `/${r}`;
+    }
+    return r.startsWith('/') ? `${base}${r}` : `${base}/${r}`;
   }
 
   getOrderById(orderId: string | number): Observable<IOrder> {
