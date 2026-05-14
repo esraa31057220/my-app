@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { OrderService } from '../../services/order.service';
+import { OrderService } from '../../core/services/order.service';
 import { OrderStatus } from '../../models/iorder';
 import { AdminDataTableComponent } from '../shared/admin-data-table/admin-data-table';
 
