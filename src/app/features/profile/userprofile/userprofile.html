@@ -163,8 +163,8 @@
                 <span class="item-status" [attr.data-status]="order.status">{{ order.status }}</span>
               </div>
               <div class="item-details">
-                <p>Placed on: {{ order.createdAt | date:'mediumDate' }}</p>
-                <p>Total: {{ order.total | currency }}</p>
+                <p>Placed on: {{ order.orderDate | date:'mediumDate' }}</p>
+                <p>Total: {{ order.totalPrice | currency }}</p>
               </div>
             </div>
           </div>

@@ -37,9 +37,9 @@
           <img
             *ngFor="let item of (order.items || []).slice(0, 4)"
             [src]="item.thumbnail || ''"
-            [alt]="item.title || item.productName"
+            [alt]="item.productName"
             class="order-thumb"
-            [title]="item.title || item.productName"
+            [title]="item.productName"
           />
           <span class="order-more" *ngIf="(order.items || []).length > 4">
             +{{ (order.items || []).length - 4 }}
@@ -48,9 +48,9 @@
 
         <div class="order-card-footer">
           <div class="order-meta">
-            <span class="meta-row">📅 {{ (order.createdAt ?? order.orderDate) | date:'mediumDate' }}</span>
+            <span class="meta-row">📅 {{ order.orderDate | date:'mediumDate' }}</span>
             <span class="meta-row">🛍️ {{ (order.items || []).length }} item{{ (order.items || []).length > 1 ? 's' : '' }}</span>
-            <span class="meta-row meta-total">${{ (order.total ?? order.totalPrice) | number:'1.2-2' }}</span>
+            <span class="meta-row meta-total">${{ order.totalPrice | number:'1.2-2' }}</span>
           </div>
 
           <div class="order-admin-bar" *ngIf="isAdmin()">

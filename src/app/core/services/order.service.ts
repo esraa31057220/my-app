@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { forkJoin, Observable, of, throwError } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap, timeout } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { CheckoutResponse, Order } from '../../models';
 import { IOrder, IOrderLineItem, OrderStatus } from '../../models/iorder';
@@ -76,10 +76,11 @@ export class OrderService {
    * render thumbnails on /my-orders, /order/:id/tracking and /order/:id/confirmation.
    */
   private enrichOrdersWithProductImages(orders$: Observable<IOrder[]>): Observable<IOrder[]> {
-    return forkJoin({
-      orders: orders$,
-      products: this.products.getProducts().pipe(catchError(() => of<IProduct[]>([]))),
-    }).pipe(
+    const products$ = this.products.getProducts().pipe(
+      timeout({ first: 3000 }),
+      catchError(() => of<IProduct[]>([]))
+    );
+    return forkJoin({ orders: orders$, products: products$ }).pipe(
       map(({ orders, products }) => {
         if (!products.length) return orders;
         const byId = new Map<number, IProduct>();
