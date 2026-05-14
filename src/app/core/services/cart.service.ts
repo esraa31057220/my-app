@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, of, tap } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { CartItem as SpecCartItem, CartResponse } from '../../models';
@@ -105,6 +105,14 @@ export class CartService {
   private apiUrl = `${environment.apiUrl}/ShoppingCart`;
 
   private items: CartItem[] = [];
+  /**
+   * Tracks productIds the backend already has a CartItems row for.
+   * Workaround for the API's Add_To_Cart inserting a new row on every call
+   * (which makes CheckOut throw DbUpdateConcurrencyException at the second
+   * stock-decrement). We never POST the same productId twice; subsequent
+   * adds and increments only update the local cart.
+   */
+  private serverProductIds = new Set<number>();
   private readonly fallbackImg =
     'data:image/svg+xml,' +
     encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80"><rect width="100%" height="100%" fill="#e8e8ed"/></svg>');
@@ -125,10 +133,12 @@ export class CartService {
   addToCart(product: IProduct, quantity?: number): void;
   addToCart(arg: number | IProduct, quantity: number = 1): Observable<any> | void {
     if (typeof arg === 'number') {
-      const params = new HttpParams()
-        .set('ProductId', arg)
-        .set('Quantity', quantity);
-      return this.http.post(`${this.apiUrl}/Add_To_Cart`, null, { params });
+      if (this.serverProductIds.has(arg)) {
+        return of(null);
+      }
+      return this._syncAddToApi(arg, quantity).pipe(
+        tap(() => this.serverProductIds.add(arg))
+      );
     }
     const product = arg;
     const existing = this.items.find((i) => i.id === product.id);
@@ -138,7 +148,12 @@ export class CartService {
       this.items.push(this.lineFromProduct(product, quantity));
     }
     this.emitQty();
-    if (this.isLoggedIn) this._syncAddToApi(product.id, quantity).subscribe();
+    if (this.isLoggedIn && !this.serverProductIds.has(product.id)) {
+      this._syncAddToApi(product.id, quantity).subscribe({
+        next: () => this.serverProductIds.add(product.id),
+        error: () => { },
+      });
+    }
   }
 
   /** Spec API — GET /api/ShoppingCart/Get_Cart_Items */
@@ -185,6 +200,7 @@ export class CartService {
       map((raw) => extractRows(raw).map((r) => normalizeCartLine(r, this.fallbackImg))),
       tap((items) => {
         this.items = items ?? [];
+        this.serverProductIds = new Set(this.items.map((i) => i.id));
         this.emitQty();
       })
     );
@@ -202,11 +218,12 @@ export class CartService {
 
   incrementItem(productId: number): void {
     const item = this.items.find((i) => i.id === productId);
-    if (item) {
-      item.quantity++;
-      this.emitQty();
-      if (this.isLoggedIn) this._syncAddToApi(productId, 1).subscribe();
-    }
+    if (!item) return;
+    item.quantity++;
+    this.emitQty();
+    // Do NOT POST again — the API inserts a new row on every call.
+    // Local-only quantity bumps avoid the duplicate-cart-row bug that
+    // crashes CheckOut on the second stock update.
   }
 
   decrementItem(productId: number): void {
@@ -218,10 +235,12 @@ export class CartService {
 
   removeItem(productId: number): void {
     this.items = this.items.filter((i) => i.id !== productId);
+    this.serverProductIds.delete(productId);
     this.emitQty();
   }
   clearCart(): void {
     this.items = [];
+    this.serverProductIds.clear();
     this.emitQty();
   }
 }
