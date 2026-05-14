@@ -346,10 +346,30 @@
   text-transform: uppercase;
 }
 
-.item-status[data-status="Delivered"] { background: #d1fae5; color: #065f46; }
-.item-status[data-status="Pending"] { background: #fef3c7; color: #92400e; }
-.item-status[data-status="Shipped"] { background: #dbeafe; color: #1e40af; }
-.item-status[data-status="Cancelled"] { background: #fee2e2; color: #991b1b; }
+/* Backend returns lowercase statuses ("pending", "delivered"…); match case-insensitively. */
+.item-status[data-status="Delivered" i],
+.item-status[data-status="delivered" i] { background: #d1fae5; color: #065f46; }
+.item-status[data-status="Pending" i],
+.item-status[data-status="pending" i] { background: #fef3c7; color: #92400e; }
+.item-status[data-status="Confirmed" i],
+.item-status[data-status="confirmed" i] { background: #dbeafe; color: #1e40af; }
+.item-status[data-status="Shipped" i],
+.item-status[data-status="shipped" i] { background: #ede9fe; color: #5b21b6; }
+.item-status[data-status="Cancelled" i],
+.item-status[data-status="cancelled" i] { background: #fee2e2; color: #991b1b; }
+
+/* Order/Review row metadata: explicit dark color so it stays readable on the light card. */
+.item-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+  color: #334155;
+}
+.item-details p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #334155;
+}
 
 /* Mini Product Cards (Wishlist) */
 .product-grid-mini {

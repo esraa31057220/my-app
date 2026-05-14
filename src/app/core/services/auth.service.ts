@@ -135,19 +135,29 @@ export class AuthService {
   }
 
   private loadUserFromStorage(): IUser | null {
+    const fromToken = this.getToken() ? this.decodeUserFromToken() : null;
     const raw = localStorage.getItem(CURRENT_USER_KEY);
+    let fromStorage: IUser | null = null;
     if (raw) {
       try {
-        return JSON.parse(raw) as IUser;
+        fromStorage = JSON.parse(raw) as IUser;
       } catch {
         /* ignore */
       }
     }
-    if (this.getToken()) {
-      const fromToken = this.decodeUserFromToken();
-      if (fromToken) return fromToken;
+    if (!fromToken && !fromStorage) return null;
+    // Merge token (always fresh from JWT) with storage extras (phone/address/payment
+    // saved locally by the profile edit flow). Storage wins only if it has a non-empty value,
+    // so a stale storage record with empty email is overwritten by the live JWT claim.
+    const merged: IUser = { ...(fromToken ?? ({} as IUser)), ...(fromStorage ?? {}) };
+    if (fromToken) {
+      merged.id = fromStorage?.id ?? fromToken.id;
+      merged.firstName = fromStorage?.firstName || fromToken.firstName || '';
+      merged.lastName = fromStorage?.lastName || fromToken.lastName || '';
+      merged.email = fromStorage?.email || fromToken.email || '';
+      merged.role = fromStorage?.role || fromToken.role || 'Customer';
     }
-    return null;
+    return merged;
   }
 
   private toRegisterBody(user: RegisterRequest): Record<string, string> {
@@ -231,7 +241,14 @@ export class AuthService {
       payload[CLAIMS_BASE + 'surname'] ??
       payload[CLAIMS_BASE + 'familyname'] ??
       '';
-    const email = payload['email'] ?? payload[CLAIMS_BASE + 'emailaddress'] ?? '';
+    const email =
+      payload['email'] ??
+      payload[CLAIMS_BASE + 'emailaddress'] ??
+      payload['unique_name'] ??
+      payload[CLAIMS_BASE + 'name'] ??
+      payload['preferred_username'] ??
+      payload['upn'] ??
+      '';
     const roles = this.decodeRolesFromToken();
     return {
       id,
