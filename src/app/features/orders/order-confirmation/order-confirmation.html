@@ -12,7 +12,6 @@
       <div class="conf-check">✅</div>
       <h1>Order Confirmed!</h1>
       <p class="conf-sub">
-        Thank you <strong>{{ order.userName }}</strong>!
         Your order <strong>#{{ order.id }}</strong> has been placed.
       </p>
     </div>
@@ -26,9 +25,9 @@
         <h3 class="conf-card-title">🛍️ Items Ordered</h3>
         <ul class="conf-items">
           <li class="conf-item" *ngFor="let item of order.items || []">
-            <img class="conf-thumb" [src]="item.thumbnail || ''" [alt]="item.title || item.productName" />
+            <img class="conf-thumb" [src]="item.thumbnail || ''" [alt]="item.productName" />
             <div class="conf-item-info">
-              <p class="conf-item-name">{{ item.title || item.productName }}</p>
+              <p class="conf-item-name">{{ item.productName }}</p>
               <p class="conf-item-meta">
                 Qty: {{ item.quantity }} · ${{ item.price * item.quantity | number:'1.2-2' }}
               </p>
@@ -59,14 +58,14 @@
           </div>
           <div class="info-row">
             <span class="info-label">Date</span>
-            <span>{{ order.createdAt | date:'medium' }}</span>
+            <span>{{ order.orderDate | date:'medium' }}</span>
           </div>
         </div>
 
         <div class="card conf-card conf-total-card">
           <div class="conf-total-row">
             <span>Order Total</span>
-            <span class="conf-total-amount">${{ (order.total ?? order.totalPrice) | number:'1.2-2' }}</span>
+            <span class="conf-total-amount">${{ order.totalPrice | number:'1.2-2' }}</span>
           </div>
         </div>
 

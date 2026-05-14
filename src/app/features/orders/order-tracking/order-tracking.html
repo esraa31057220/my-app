@@ -62,11 +62,11 @@
           </div>
           <div class="info-row">
             <span class="info-label">Ordered</span>
-            <span>{{ order.createdAt | date:'mediumDate' }}</span>
+            <span>{{ order.orderDate | date:'mediumDate' }}</span>
           </div>
           <div class="info-row">
             <span class="info-label">Total</span>
-            <span class="track-total">${{ (order.total ?? order.totalPrice) | number:'1.2-2' }}</span>
+            <span class="track-total">${{ order.totalPrice | number:'1.2-2' }}</span>
           </div>
         </div>
 
@@ -74,9 +74,9 @@
           <h3 class="track-card-title">🛍️ {{ (order.items || []).length }} Items</h3>
           <ul class="track-items">
             <li *ngFor="let item of order.items || []" class="track-item">
-              <img [src]="item.thumbnail || ''" [alt]="item.title || item.productName" class="track-thumb" />
+              <img [src]="item.thumbnail || ''" [alt]="item.productName" class="track-thumb" />
               <div>
-                <p class="track-item-name">{{ item.title || item.productName }}</p>
+                <p class="track-item-name">{{ item.productName }}</p>
                 <p class="track-item-meta">x{{ item.quantity }} · ${{ item.price | number:'1.2-2' }}</p>
               </div>
             </li>
