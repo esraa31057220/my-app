@@ -1,6 +1,12 @@
 <div class="adm-page">
-  <h1 class="adm-page-title">Products</h1>
-  <p class="adm-page-sub">Search uses the catalog API (<code>Search</code> query). Table paging is client-side on the result set.</p>
+  <div class="adm-page-head">
+    <div>
+      <h1 class="adm-page-title">Products</h1>
+      <p class="adm-page-sub">Search uses the catalog API (<code>Search</code> query). Table paging is client-side on the result set.</p>
+    </div>
+    <button type="button" class="adm-btn-primary" (click)="openNew()">+ Add product</button>
+  </div>
+
   <label class="adm-api-search">
     API search
     <input
@@ -10,11 +16,94 @@
       placeholder="Name or description…"
     />
   </label>
+
+  @if (formOpen()) {
+    <div class="adm-edit-panel">
+      <h3 class="adm-form-title">{{ editId() !== null ? 'Edit product #' + editId() : 'New product' }}</h3>
+
+      <div class="adm-form-grid">
+        <label class="adm-field">
+          <span>Name</span>
+          <input
+            type="text"
+            [ngModel]="draft().Name"
+            (ngModelChange)="updateField('Name', $event)"
+            placeholder="Product name"
+          />
+        </label>
+
+        <label class="adm-field">
+          <span>Category</span>
+          <select
+            [ngModel]="draft().CategoryId"
+            (ngModelChange)="updateField('CategoryId', +$event)"
+          >
+            <option [ngValue]="0">— Select —</option>
+            @for (c of categories(); track c.id) {
+              <option [ngValue]="c.id">{{ c.name }}</option>
+            }
+          </select>
+        </label>
+
+        <label class="adm-field">
+          <span>Price</span>
+          <input
+            type="number"
+            min="0"
+            step="0.01"
+            [ngModel]="draft().Price"
+            (ngModelChange)="updateField('Price', +$event)"
+          />
+        </label>
+
+        <label class="adm-field">
+          <span>Stock</span>
+          <input
+            type="number"
+            min="0"
+            step="1"
+            [ngModel]="draft().StockQuantity"
+            (ngModelChange)="updateField('StockQuantity', +$event)"
+          />
+        </label>
+
+        <label class="adm-field adm-field-wide">
+          <span>Description</span>
+          <textarea
+            rows="3"
+            [ngModel]="draft().Description"
+            (ngModelChange)="updateField('Description', $event)"
+          ></textarea>
+        </label>
+
+        <label class="adm-field adm-field-wide">
+          <span>Image{{ editId() !== null ? ' (optional — leave blank to keep current)' : '' }}</span>
+          <input type="file" accept="image/*" (change)="onFileSelected($event)" />
+          @if (draft().Image) {
+            <small class="adm-file-name">{{ draft().Image?.name }}</small>
+          }
+        </label>
+      </div>
+
+      @if (saveError()) {
+        <p class="adm-form-error">{{ saveError() }}</p>
+      }
+
+      <div class="adm-form-actions">
+        <button type="button" class="adm-btn-primary" (click)="save()" [disabled]="saving()">
+          {{ saving() ? 'Saving…' : (editId() !== null ? 'Save changes' : 'Create product') }}
+        </button>
+        <button type="button" class="adm-btn-ghost" (click)="closeForm()">Cancel</button>
+      </div>
+    </div>
+  }
+
   @if (loading()) {
     <p class="adm-page-sub">Loading…</p>
   } @else {
     <app-admin-data-table [columns]="cols" [rowSource]="rows()" [searchKeys]="['name', 'categoryName']">
       <ng-template #actions let-row>
+        <button type="button" class="adm-link" (click)="openEdit(row)">Edit</button>
         <button type="button" class="adm-danger" (click)="deleteProduct(row['id'])">Delete</button>
       </ng-template>
     </app-admin-data-table>

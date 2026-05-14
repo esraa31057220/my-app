@@ -148,6 +148,25 @@
   width: 100%;
 }
 
+/* ── Share card ────────────────────────────── */
+.conf-share-sub {
+  margin: 0 0 var(--space-sm);
+  color: var(--clr-muted);
+  font-size: 0.85rem;
+}
+
+.conf-share-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.conf-share-actions .btn {
+  flex: 1 1 calc(50% - 0.5rem);
+  min-width: 110px;
+  justify-content: center;
+}
+
 /* ── Responsive ────────────────────────────── */
 @media (max-width: 900px) {
   .conf-grid {

@@ -246,6 +246,38 @@
   margin-top: 2px;
 }
 
+/* ── Promo code row ───────────────────────────── */
+.promo-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: var(--space-sm) 0;
+  padding: var(--space-sm) 0;
+  border-top: 1px solid var(--clr-border);
+}
+
+.promo-wrap {
+  display: flex;
+  gap: 8px;
+}
+
+.promo-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.promo-applied {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.total-discount {
+  color: #047857;
+  font-weight: 600;
+}
+
 /* ── Totals ───────────────────────────────────── */
 .summary-totals {
   display: flex;

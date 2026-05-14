@@ -5,6 +5,14 @@
   max-width: 1000px;
 }
 
+.adm-page-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
 .adm-page-title {
   font-family: 'Playfair Display', serif;
   font-size: 28px;
@@ -31,6 +39,105 @@
   padding: 8px 12px;
   border-radius: 8px;
   border: 0.5px solid #e0e0e0;
+}
+
+.adm-btn-primary {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  background: #2c2c2a;
+  color: #f1efe8;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.adm-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.adm-btn-ghost {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 0.5px solid #e0e0e0;
+  background: #fff;
+  color: #444;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.adm-edit-panel {
+  margin-bottom: 1.25rem;
+  padding: 1rem 1.25rem;
+  background: #fff;
+  border: 0.5px solid #e5e5e5;
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+.adm-form-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  margin: 0 0 0.75rem;
+}
+
+.adm-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem 1rem;
+}
+
+.adm-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: #555;
+}
+
+.adm-field-wide {
+  grid-column: 1 / -1;
+}
+
+.adm-field input,
+.adm-field select,
+.adm-field textarea {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 0.5px solid #e0e0e0;
+  font-family: inherit;
+  font-size: 14px;
+  color: #0f172a;
+}
+
+.adm-field textarea {
+  resize: vertical;
+}
+
+.adm-file-name {
+  margin-top: 4px;
+  color: #555;
+}
+
+.adm-form-error {
+  margin: 0.75rem 0 0;
+  color: #c0392b;
+  font-size: 13px;
+}
+
+.adm-form-actions {
+  margin-top: 0.75rem;
+  display: flex;
+  gap: 8px;
+}
+
+.adm-link {
+  border: none;
+  background: none;
+  color: #0c447c;
+  cursor: pointer;
+  font-size: 13px;
+  margin-right: 8px;
 }
 
 .adm-danger {

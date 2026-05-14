@@ -11,7 +11,7 @@ import { AdminDataTableComponent } from '../shared/admin-data-table/admin-data-t
   standalone: true,
   imports: [CommonModule, FormsModule, AdminDataTableComponent],
   templateUrl: './admin-users.html',
-  styleUrls: ['./admin-users.css', '../../features/profile/users/users.css'],
+  styleUrls: ['./admin-users.css'],
 })
 export class AdminUsers implements OnInit {
   private usersService = inject(UsersService);
