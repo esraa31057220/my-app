@@ -39,9 +39,9 @@ export class AdminOrders implements OnInit {
       this.rows.set(
         sorted.map((o) => ({
           ...o,
-          total: o.total ?? o.totalPrice ?? 0,
+          total: o.totalPrice ?? 0,
           shipLine: [o.address, o.city, o.phone].filter(Boolean).join(' · ') || o.shippingAddress || '',
-          dateLine: String(o.createdAt ?? o.orderDate ?? ''),
+          dateLine: String(o.orderDate ?? ''),
         })) as unknown as Record<string, unknown>[]
       );
     });
@@ -61,7 +61,7 @@ export class AdminOrders implements OnInit {
                 shipLine: [updated.address, updated.city, updated.phone]
                   .filter(Boolean)
                   .join(' · ') || updated.shippingAddress || r['shipLine'],
-                dateLine: String(updated.createdAt ?? updated.orderDate ?? r['dateLine']),
+                dateLine: String(updated.orderDate ?? r['dateLine']),
               } as Record<string, unknown>)
             : r
         )
