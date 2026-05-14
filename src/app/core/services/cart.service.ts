@@ -1,11 +1,12 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, Observable, of, tap } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable, forkJoin, of, tap } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { CartItem as SpecCartItem, CartResponse } from '../../models';
 import { IProduct } from '../../models/iproduct';
 import { AuthService } from './auth.service';
+import { ProductService } from './product.service';
 
 export interface CartItem {
   id: number;
@@ -102,6 +103,7 @@ function extractRows(raw: unknown): unknown[] {
 export class CartService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
+  private productService = inject(ProductService);
   private apiUrl = `${environment.apiUrl}/ShoppingCart`;
 
   private items: CartItem[] = [];
@@ -196,8 +198,35 @@ export class CartService {
   }
 
   loadCartFromApi(): Observable<CartItem[]> {
-    return this.http.get<unknown>(`${this.apiUrl}/Get_Cart_Items`).pipe(
-      map((raw) => extractRows(raw).map((r) => normalizeCartLine(r, this.fallbackImg))),
+    return forkJoin({
+      cart: this.http
+        .get<unknown>(`${this.apiUrl}/Get_Cart_Items`)
+        .pipe(
+          map((raw) => extractRows(raw).map((r) => normalizeCartLine(r, this.fallbackImg))),
+          catchError(() => of([] as CartItem[]))
+        ),
+      products: this.productService.getProducts().pipe(catchError(() => of([] as IProduct[]))),
+    }).pipe(
+      map(({ cart, products }) => {
+        const byId = new Map<number, IProduct>((products as IProduct[]).map((p) => [p.id, p]));
+        // Backend's Get_Cart_Items omits image/stock; fill them in from the products catalog so
+        // the cart page renders proper thumbnails and per-item stock instead of placeholders.
+        return cart.map((line) => {
+          const p = byId.get(line.id);
+          if (!p) return line;
+          const img = p.image ?? line.image;
+          const images = img ? [img] : line.images;
+          return {
+            ...line,
+            name: line.name || p.name,
+            title: (line.title || p.name) as string,
+            image: img,
+            thumbnail: img,
+            images,
+            stock: line.stock || p.stockQuantity,
+          };
+        });
+      }),
       tap((items) => {
         this.items = items ?? [];
         this.serverProductIds = new Set(this.items.map((i) => i.id));

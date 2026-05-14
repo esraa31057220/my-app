@@ -20,20 +20,92 @@
         <p class="dash-label">Categories</p>
         <p class="dash-value">{{ categoryCount() }}</p>
       </div>
+      @if (totalRevenue() != null) {
+        <div class="dash-card dash-card-accent">
+          <p class="dash-label">Total revenue</p>
+          <p class="dash-value">{{ totalRevenue() | currency }}</p>
+        </div>
+      }
     </div>
+
     <div class="dash-blocks">
-      <div class="dash-block">
-        <h2>Sales status</h2>
-        <pre class="dash-pre">{{ salesSnapshot() | json }}</pre>
-      </div>
-      <div class="dash-block">
-        <h2>Low stock</h2>
-        <pre class="dash-pre">{{ lowStock() | json }}</pre>
-      </div>
-      <div class="dash-block">
-        <h2>Top selling</h2>
-        <pre class="dash-pre">{{ topSelling() | json }}</pre>
-      </div>
+      <section class="dash-block">
+        <header class="dash-block-header">
+          <h2>Sales status</h2>
+          <span class="dash-block-count">{{ salesRows().length }} entr{{ salesRows().length === 1 ? 'y' : 'ies' }}</span>
+        </header>
+        @if (salesRows().length === 0) {
+          <p class="dash-empty">No data available.</p>
+        } @else {
+          <div class="dash-rows">
+            @for (row of salesRows(); track row.title) {
+              <article class="dash-row">
+                <h3 class="dash-row-title">{{ row.title }}</h3>
+                <dl class="dash-row-fields">
+                  @for (field of row.fields; track field.label) {
+                    <div class="dash-row-field">
+                      <dt>{{ field.label }}</dt>
+                      <dd>{{ field.value }}</dd>
+                    </div>
+                  }
+                </dl>
+              </article>
+            }
+          </div>
+        }
+      </section>
+
+      <section class="dash-block">
+        <header class="dash-block-header">
+          <h2>Low stock</h2>
+          <span class="dash-block-count tag tag--orange">{{ lowStockRows().length }}</span>
+        </header>
+        @if (lowStockRows().length === 0) {
+          <p class="dash-empty">No low-stock products.</p>
+        } @else {
+          <div class="dash-rows">
+            @for (row of lowStockRows(); track row.title) {
+              <article class="dash-row dash-row-warning">
+                <h3 class="dash-row-title">{{ row.title }}</h3>
+                <dl class="dash-row-fields">
+                  @for (field of row.fields; track field.label) {
+                    <div class="dash-row-field">
+                      <dt>{{ field.label }}</dt>
+                      <dd>{{ field.value }}</dd>
+                    </div>
+                  }
+                </dl>
+              </article>
+            }
+          </div>
+        }
+      </section>
+
+      <section class="dash-block">
+        <header class="dash-block-header">
+          <h2>Top selling</h2>
+          <span class="dash-block-count tag tag--green">{{ topSellingRows().length }}</span>
+        </header>
+        @if (topSellingRows().length === 0) {
+          <p class="dash-empty">No top-seller data yet.</p>
+        } @else {
+          <div class="dash-rows">
+            @for (row of topSellingRows(); track row.title) {
+              <article class="dash-row dash-row-success">
+                <h3 class="dash-row-title">{{ row.title }}</h3>
+                <dl class="dash-row-fields">
+                  @for (field of row.fields; track field.label) {
+                    <div class="dash-row-field">
+                      <dt>{{ field.label }}</dt>
+                      <dd>{{ field.value }}</dd>
+                    </div>
+                  }
+                </dl>
+              </article>
+            }
+          </div>
+        }
+      </section>
     </div>
   }
 </div>
