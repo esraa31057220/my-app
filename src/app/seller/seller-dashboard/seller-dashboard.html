@@ -1,0 +1,59 @@
+<div class="seller-dashboard">
+  <div class="page-header">
+    <h1>📊 Seller Dashboard</h1>
+    <p>Overview of your store performance</p>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading dashboard data...</p>
+    </div>
+  } @else {
+    <div class="stats-grid">
+      <div class="stat-card stat-card--products">
+        <div class="stat-icon">📦</div>
+        <div class="stat-info">
+          <p class="stat-label">Total Products</p>
+          <p class="stat-value">{{ productCount() }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card stat-card--orders">
+        <div class="stat-icon">📋</div>
+        <div class="stat-info">
+          <p class="stat-label">Total Orders</p>
+          <p class="stat-value">{{ orderCount() }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card stat-card--revenue">
+        <div class="stat-icon">💰</div>
+        <div class="stat-info">
+          <p class="stat-label">Total Revenue</p>
+          <p class="stat-value">{{ totalRevenue() | currency:'USD' }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card stat-card--lowstock">
+        <div class="stat-icon">⚠️</div>
+        <div class="stat-info">
+          <p class="stat-label">Low Stock Items</p>
+          <p class="stat-value">{{ lowStockCount() }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-actions">
+      <a routerLink="/seller/products" class="btn btn-primary">
+        <span>➕</span> Add New Product
+      </a>
+      <a routerLink="/seller/orders" class="btn btn-outline">
+        <span>📋</span> View Orders
+      </a>
+      <a routerLink="/seller/earnings" class="btn btn-outline">
+        <span>💰</span> View Earnings
+      </a>
+    </div>
+  }
+</div>

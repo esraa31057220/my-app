@@ -1,0 +1,62 @@
+<div class="seller-orders">
+  <div class="page-header">
+    <h1>📋 Orders</h1>
+    <p>Manage and process customer orders</p>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading orders...</p>
+    </div>
+  } @else {
+    <div class="orders-table-wrapper">
+      <table class="orders-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Status</th>
+            <th>Total</th>
+            <th>Shipping</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (order of rows(); track order.id) {
+            <tr>
+              <td class="order-id">#{{ order.id }}</td>
+              <td class="customer-name">{{ order.userName }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="getStatusClass(order.status)">
+                  {{ getStatusLabel(order.status) }}
+                </span>
+              </td>
+              <td class="order-total">${{ order.total | number:'1.2-2' }}</td>
+              <td class="shipping-info">{{ order.shipLine }}</td>
+              <td class="order-date">{{ order.dateLine }}</td>
+              <td>
+                <select
+                  class="status-select"
+                  [ngModel]="order.status"
+                  (ngModelChange)="changeStatus(order, $event)"
+                >
+                  @for (status of statuses; track status) {
+                    <option [value]="status">{{ getStatusLabel(status) }}</option>
+                  }
+                </select>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7" class="empty-row">
+                <p>No orders found.</p>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

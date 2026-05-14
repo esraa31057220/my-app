@@ -1,0 +1,197 @@
+/* seller-orders.css — ShopHub seller orders management */
+
+.page-header {
+  margin-bottom: var(--space-xl, 32px);
+}
+
+.page-header h1 {
+  font-family: var(--font-body, system-ui);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--clr-brand, #c084fc);
+  margin: 0 0 var(--space-sm, 8px) 0;
+}
+
+.page-header p {
+  font-size: 0.95rem;
+  color: var(--clr-muted, #9ca3af);
+  margin: 0;
+}
+
+/* ── Loading state ───────────────────────────── */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2xl, 48px);
+  gap: var(--space-md, 16px);
+  color: var(--clr-muted, #9ca3af);
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(192, 132, 252, 0.2);
+  border-top-color: var(--clr-brand, #c084fc);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Orders table ───────────────────────────── */
+.orders-table-wrapper {
+  background: linear-gradient(135deg, rgba(30, 30, 50, 0.8), rgba(25, 25, 45, 0.9));
+  border: 1px solid var(--clr-border, rgba(192, 132, 252, 0.2));
+  border-radius: var(--radius-lg, 12px);
+  overflow-x: auto;
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.orders-table thead {
+  background: rgba(192, 132, 252, 0.1);
+  border-bottom: 1px solid var(--clr-border, rgba(192, 132, 252, 0.2));
+}
+
+.orders-table th {
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--clr-brand, #c084fc);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.orders-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--clr-border, rgba(192, 132, 252, 0.1));
+  font-size: 0.9rem;
+  color: var(--clr-text, #f3f4f6);
+}
+
+.orders-table tr:last-child td {
+  border-bottom: none;
+}
+
+.orders-table tr:hover {
+  background: rgba(192, 132, 252, 0.05);
+}
+
+.order-id {
+  font-weight: 700;
+  color: var(--clr-brand, #c084fc);
+}
+
+.customer-name {
+  font-weight: 600;
+}
+
+.order-total {
+  font-weight: 700;
+  color: #34d399;
+}
+
+.shipping-info {
+  font-size: 0.85rem;
+  color: var(--clr-muted, #9ca3af);
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.order-date {
+  font-size: 0.85rem;
+  color: var(--clr-muted, #9ca3af);
+}
+
+/* ── Status badge ────────────────────────────── */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: var(--radius-full, 9999px);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-pending {
+  background: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+.status-confirmed {
+  background: rgba(96, 165, 250, 0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(96, 165, 250, 0.3);
+}
+
+.status-shipped {
+  background: rgba(52, 211, 153, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(52, 211, 153, 0.3);
+}
+
+.status-delivered {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.status-cancelled {
+  background: rgba(248, 113, 113, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(248, 113, 113, 0.3);
+}
+
+/* ── Status select ───────────────────────────── */
+.status-select {
+  background: var(--clr-surface, rgba(30, 30, 50, 0.8));
+  border: 1px solid var(--clr-border, rgba(192, 132, 252, 0.2));
+  border-radius: var(--radius-md, 8px);
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  color: var(--clr-text, #f3f4f6);
+  cursor: pointer;
+  transition: border-color var(--dur-fast, 0.2s);
+}
+
+.status-select:focus {
+  outline: none;
+  border-color: var(--clr-brand, #c084fc);
+}
+
+/* ── Empty row ───────────────────────────────── */
+.empty-row {
+  text-align: center;
+  padding: var(--space-2xl, 48px);
+}
+
+.empty-row p {
+  color: var(--clr-muted, #9ca3af);
+  margin: 0;
+}
+
+/* ── Responsive ───────────────────────────────── */
+@media (max-width: 900px) {
+  .orders-table-wrapper {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  .shipping-info {
+    max-width: 150px;
+  }
+}

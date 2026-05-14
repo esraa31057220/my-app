@@ -1,0 +1,162 @@
+<div class="seller-products">
+  <div class="page-header">
+    <h1>📦 My Products</h1>
+    <p>Manage your product inventory</p>
+  </div>
+
+  <div class="products-toolbar">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search products..."
+        [ngModel]="apiSearch()"
+        (ngModelChange)="onSearchInput($event)"
+      />
+    </div>
+    <button class="btn btn-primary" (click)="openNew()">
+      <span>➕</span> Add Product
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading products...</p>
+    </div>
+  } @else {
+    <div class="products-grid">
+      @for (product of rows(); track product.id) {
+        <div class="product-card">
+          <div class="product-image">
+            <img [src]="productImageUrl(product)" [alt]="product.name" />
+          </div>
+          <div class="product-info">
+            <h3 class="product-name">{{ product.name }}</h3>
+            <p class="product-desc">{{ product.description }}</p>
+            <div class="product-meta">
+              <span class="meta-item">
+                <span class="meta-label">Price:</span>
+                <span class="meta-value">${{ product.price | number:'1.2-2' }}</span>
+              </span>
+              <span class="meta-item">
+                <span class="meta-label">Stock:</span>
+                <span class="meta-value" [class.low-stock]="product.stockQuantity < 10">
+                  {{ product.stockQuantity }}
+                </span>
+              </span>
+            </div>
+            <div class="product-actions">
+              <button class="btn btn-sm btn-outline" (click)="openEdit(product)">
+                ✏️ Edit
+              </button>
+              <button class="btn btn-sm btn-danger" (click)="deleteProduct(product.id)">
+                🗑️ Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      } @empty {
+        <div class="empty-state">
+          <p>No products found. Add your first product to get started.</p>
+        </div>
+      }
+    </div>
+  }
+
+  @if (formOpen()) {
+    <div class="modal-overlay" (click)="closeForm()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>{{ editId() ? 'Edit Product' : 'Add New Product' }}</h2>
+          <button class="modal-close" (click)="closeForm()">✕</button>
+        </div>
+        <div class="modal-body">
+          @if (saveError()) {
+            <div class="error-message">{{ saveError() }}</div>
+          }
+
+          <div class="form-group">
+            <label class="form-label">Product Name</label>
+            <input
+              type="text"
+              class="form-input"
+              [ngModel]="draft().Name"
+              (ngModelChange)="updateField('Name', $event)"
+              placeholder="Enter product name"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea
+              class="form-input"
+              rows="3"
+              [ngModel]="draft().Description"
+              (ngModelChange)="updateField('Description', $event)"
+              placeholder="Enter product description"
+            ></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Price ($)</label>
+              <input
+                type="number"
+                class="form-input"
+                [ngModel]="draft().Price"
+                (ngModelChange)="updateField('Price', $event)"
+                placeholder="0.00"
+                min="0"
+                step="0.01"
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Stock Quantity</label>
+              <input
+                type="number"
+                class="form-input"
+                [ngModel]="draft().StockQuantity"
+                (ngModelChange)="updateField('StockQuantity', $event)"
+                placeholder="0"
+                min="0"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select
+              class="form-input"
+              [ngModel]="draft().CategoryId"
+              (ngModelChange)="updateField('CategoryId', $event)"
+            >
+              <option value="">Select category</option>
+              @for (cat of categories(); track cat.id) {
+                <option [value]="cat.id">{{ cat.name }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Product Image</label>
+            <input
+              type="file"
+              class="form-input"
+              (change)="onFileSelected($event)"
+              accept="image/*"
+            />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" (click)="closeForm()">Cancel</button>
+          <button class="btn btn-primary" (click)="save()" [disabled]="saving()">
+            <span class="spinner" *ngIf="saving()"></span>
+            <span>{{ saving() ? 'Saving...' : 'Save Product' }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

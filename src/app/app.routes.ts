@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
+import { sellerGuard } from './core/guards/seller.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -24,7 +25,6 @@ export const routes: Routes = [
   {
     path: 'cart',
     loadComponent: () => import('./features/cart/cart/cart').then((m) => m.Cart),
-    canActivate: [authGuard],
   },
   {
     path: 'profile',
@@ -35,7 +35,6 @@ export const routes: Routes = [
   {
     path: 'checkout',
     loadComponent: () => import('./features/orders/checkout/checkout').then((m) => m.Checkout),
-    canActivate: [authGuard],
   },
   {
     path: 'my-orders',
@@ -73,6 +72,13 @@ export const routes: Routes = [
       import('./admin/admin-layout/admin-layout').then((m) => m.AdminLayout),
     canActivate: [authGuard, adminGuard],
     loadChildren: () => import('./admin/admin.routes').then((m) => m.adminChildRoutes),
+  },
+  {
+    path: 'seller',
+    loadComponent: () =>
+      import('./seller/seller-layout/seller-layout').then((m) => m.SellerLayout),
+    canActivate: [authGuard, sellerGuard],
+    loadChildren: () => import('./seller/seller.routes').then((m) => m.sellerChildRoutes),
   },
   { path: '**', redirectTo: 'home' },
 ];

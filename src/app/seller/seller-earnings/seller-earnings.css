@@ -1,0 +1,233 @@
+/* seller-earnings.css — ShopHub seller earnings page */
+
+.page-header {
+  margin-bottom: var(--space-xl, 32px);
+}
+
+.page-header h1 {
+  font-family: var(--font-body, system-ui);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--clr-brand, #c084fc);
+  margin: 0 0 var(--space-sm, 8px) 0;
+}
+
+.page-header p {
+  font-size: 0.95rem;
+  color: var(--clr-muted, #9ca3af);
+  margin: 0;
+}
+
+/* ── Loading state ───────────────────────────── */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2xl, 48px);
+  gap: var(--space-md, 16px);
+  color: var(--clr-muted, #9ca3af);
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(192, 132, 252, 0.2);
+  border-top-color: var(--clr-brand, #c084fc);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Earnings grid ───────────────────────────── */
+.earnings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-lg, 24px);
+  margin-bottom: var(--space-xl, 32px);
+}
+
+.earnings-card {
+  background: linear-gradient(135deg, rgba(30, 30, 50, 0.8), rgba(25, 25, 45, 0.9));
+  border: 1px solid var(--clr-border, rgba(192, 132, 252, 0.2));
+  border-radius: var(--radius-lg, 12px);
+  padding: var(--space-lg, 24px);
+  display: flex;
+  align-items: center;
+  gap: var(--space-md, 16px);
+  transition: transform var(--dur-fast, 0.2s), box-shadow var(--dur-fast, 0.2s);
+}
+
+.earnings-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(192, 132, 252, 0.15);
+}
+
+.card-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.card-info {
+  flex: 1;
+}
+
+.card-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--clr-muted, #9ca3af);
+  margin: 0 0 var(--space-xs, 4px) 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--clr-text, #f3f4f6);
+  margin: 0;
+}
+
+.earnings-card--revenue .card-icon { color: #34d399; }
+.earnings-card--orders .card-icon { color: #60a5fa; }
+.earnings-card--average .card-icon { color: #fbbf24; }
+.earnings-card--pending .card-icon { color: #f87171; }
+.earnings-card--completed .card-icon { color: #10b981; }
+
+/* ── Earnings sections ───────────────────────── */
+.earnings-section,
+.payout-section {
+  background: linear-gradient(135deg, rgba(30, 30, 50, 0.8), rgba(25, 25, 45, 0.9));
+  border: 1px solid var(--clr-border, rgba(192, 132, 252, 0.2));
+  border-radius: var(--radius-lg, 12px);
+  padding: var(--space-lg, 24px);
+  margin-bottom: var(--space-lg, 24px);
+}
+
+.earnings-section h2,
+.payout-section h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--clr-brand, #c084fc);
+  margin: 0 0 var(--space-md, 16px) 0;
+}
+
+/* ── Recent orders ───────────────────────────── */
+.recent-orders {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm, 8px);
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-md, 16px);
+  background: rgba(192, 132, 252, 0.05);
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--clr-border, rgba(192, 132, 252, 0.1));
+}
+
+.order-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.order-id {
+  font-weight: 700;
+  color: var(--clr-brand, #c084fc);
+  margin: 0;
+}
+
+.order-date {
+  font-size: 0.85rem;
+  color: var(--clr-muted, #9ca3af);
+  margin: 0;
+}
+
+.order-amount {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.amount {
+  font-weight: 700;
+  color: #34d399;
+  margin: 0;
+}
+
+.status {
+  font-size: 0.8rem;
+  color: var(--clr-muted, #9ca3af);
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.empty-text {
+  color: var(--clr-muted, #9ca3af);
+  margin: 0;
+  padding: var(--space-md, 16px);
+  text-align: center;
+}
+
+/* ── Payout section ──────────────────────────── */
+.payout-note {
+  font-size: 0.9rem;
+  color: var(--clr-muted, #9ca3af);
+  margin: 0 0 var(--space-md, 16px) 0;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: var(--radius-md, 8px);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all var(--dur-fast, 0.2s);
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  background: transparent;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #c084fc, #8b5cf6);
+  color: white;
+  border-color: rgba(192, 132, 252, 0.3);
+}
+
+.btn-primary:hover:not(:disabled) {
+  box-shadow: 0 4px 16px rgba(192, 132, 252, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Responsive ───────────────────────────────── */
+@media (max-width: 768px) {
+  .earnings-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .order-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm, 8px);
+  }
+
+  .order-amount {
+    text-align: left;
+  }
+}

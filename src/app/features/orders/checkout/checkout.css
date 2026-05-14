@@ -18,6 +18,37 @@
   animation: slideUp .3s var(--ease-out);
 }
 
+/* ── Guest notice ─────────────────────────────── */
+.guest-notice {
+  background: linear-gradient(135deg, rgba(139, 92, 246, .10), rgba(192, 132, 252, .10));
+  border: 1px solid rgba(192, 132, 252, .30);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  margin-bottom: var(--space-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.guest-notice p {
+  margin: 0;
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--clr-brand);
+}
+
+.guest-notice .link {
+  font-size: .85rem;
+  color: var(--clr-cta);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.guest-notice .link:hover {
+  text-decoration: underline;
+}
+
 /* ── Body grid ────────────────────────────────── */
 .checkout-body {
   max-width: 1100px;

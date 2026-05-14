@@ -1,0 +1,160 @@
+/* seller-dashboard.css — ShopHub seller dashboard */
+
+.page-header {
+  margin-bottom: var(--space-xl, 32px);
+}
+
+.page-header h1 {
+  font-family: var(--font-body, system-ui);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--clr-brand, #c084fc);
+  margin: 0 0 var(--space-sm, 8px) 0;
+}
+
+.page-header p {
+  font-size: 0.95rem;
+  color: var(--clr-muted, #9ca3af);
+  margin: 0;
+}
+
+/* ── Loading state ───────────────────────────── */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2xl, 48px);
+  gap: var(--space-md, 16px);
+}
+
+.loading-state .spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(192, 132, 252, 0.2);
+  border-top-color: var(--clr-brand, #c084fc);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.loading-state p {
+  color: var(--clr-muted, #9ca3af);
+  font-size: 0.95rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Stats grid ──────────────────────────────── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-lg, 24px);
+  margin-bottom: var(--space-xl, 32px);
+}
+
+.stat-card {
+  background: linear-gradient(135deg, rgba(30, 30, 50, 0.8), rgba(25, 25, 45, 0.9));
+  border: 1px solid var(--clr-border, rgba(192, 132, 252, 0.2));
+  border-radius: var(--radius-lg, 12px);
+  padding: var(--space-lg, 24px);
+  display: flex;
+  align-items: center;
+  gap: var(--space-md, 16px);
+  transition: transform var(--dur-fast, 0.2s), box-shadow var(--dur-fast, 0.2s);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(192, 132, 252, 0.15);
+}
+
+.stat-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.stat-info {
+  flex: 1;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--clr-muted, #9ca3af);
+  margin: 0 0 var(--space-xs, 4px) 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--clr-text, #f3f4f6);
+  margin: 0;
+}
+
+.stat-card--products .stat-icon { color: #60a5fa; }
+.stat-card--orders .stat-icon { color: #34d399; }
+.stat-card--revenue .stat-icon { color: #fbbf24; }
+.stat-card--lowstock .stat-icon { color: #f87171; }
+
+/* ── Dashboard actions ────────────────────────── */
+.dashboard-actions {
+  display: flex;
+  gap: var(--space-md, 16px);
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: var(--radius-md, 8px);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all var(--dur-fast, 0.2s);
+  cursor: pointer;
+  border: 1.5px solid transparent;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #c084fc, #8b5cf6);
+  color: white;
+  border-color: rgba(192, 132, 252, 0.3);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 4px 16px rgba(192, 132, 252, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--clr-brand, #c084fc);
+  border-color: var(--clr-border, rgba(192, 132, 252, 0.3));
+}
+
+.btn-outline:hover {
+  background: rgba(192, 132, 252, 0.1);
+  border-color: var(--clr-brand, #c084fc);
+}
+
+/* ── Responsive ───────────────────────────────── */
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-actions {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

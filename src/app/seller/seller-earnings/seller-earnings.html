@@ -1,0 +1,84 @@
+<div class="seller-earnings">
+  <div class="page-header">
+    <h1>💰 Earnings</h1>
+    <p>Track your revenue and payouts</p>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading earnings data...</p>
+    </div>
+  } @else {
+    <div class="earnings-grid">
+      <div class="earnings-card earnings-card--revenue">
+        <div class="card-icon">💵</div>
+        <div class="card-info">
+          <p class="card-label">Total Revenue</p>
+          <p class="card-value">{{ totalRevenue() | currency:'USD' }}</p>
+        </div>
+      </div>
+
+      <div class="earnings-card earnings-card--orders">
+        <div class="card-icon">📋</div>
+        <div class="card-info">
+          <p class="card-label">Total Orders</p>
+          <p class="card-value">{{ totalOrders() }}</p>
+        </div>
+      </div>
+
+      <div class="earnings-card earnings-card--average">
+        <div class="card-icon">📊</div>
+        <div class="card-info">
+          <p class="card-label">Avg Order Value</p>
+          <p class="card-value">{{ averageOrderValue() | currency:'USD' }}</p>
+        </div>
+      </div>
+
+      <div class="earnings-card earnings-card--pending">
+        <div class="card-icon">⏳</div>
+        <div class="card-info">
+          <p class="card-label">Pending Payouts</p>
+          <p class="card-value">{{ pendingPayouts() | currency:'USD' }}</p>
+        </div>
+      </div>
+
+      <div class="earnings-card earnings-card--completed">
+        <div class="card-icon">✅</div>
+        <div class="card-info">
+          <p class="card-label">Completed Payouts</p>
+          <p class="card-value">{{ completedPayouts() | currency:'USD' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="earnings-section">
+      <h2>Recent Orders</h2>
+      <div class="recent-orders">
+        @for (order of recentOrders(); track order.id) {
+          <div class="order-item">
+            <div class="order-info">
+              <p class="order-id">#{{ order.id }}</p>
+              <p class="order-date">{{ order.date }}</p>
+            </div>
+            <div class="order-amount">
+              <p class="amount">{{ order.total | currency:'USD' }}</p>
+              <p class="status">{{ order.status }}</p>
+            </div>
+          </div>
+        } @empty {
+          <p class="empty-text">No recent orders.</p>
+        }
+      </div>
+    </div>
+
+    <!-- [NO ENDPOINT] Payout request functionality -->
+    <div class="payout-section">
+      <h2>Request Payout</h2>
+      <p class="payout-note">Request a payout for your pending earnings. Minimum payout: $50</p>
+      <button class="btn btn-primary" [disabled]="pendingPayouts() < 50">
+        Request Payout ({{ pendingPayouts() | currency:'USD' }})
+      </button>
+    </div>
+  }
+</div>

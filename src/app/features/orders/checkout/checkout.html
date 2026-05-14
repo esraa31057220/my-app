@@ -19,6 +19,46 @@
         <div class="card checkout-form-card">
           <h3 class="form-section-title">📦 Delivery Details</h3>
 
+          @if (isGuest) {
+            <div class="guest-notice">
+              <p>👋 Checkout as Guest</p>
+              <a routerLink="/login" class="link">Log in for faster checkout</a>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">First Name</label>
+              <div class="field-wrap">
+                <span class="field-icon">👤</span>
+                <input class="field-input" [formControl]="guestForm.get('firstName')" placeholder="John" />
+              </div>
+              <span class="field-error" *ngIf="guestForm.get('firstName')?.invalid && guestForm.get('firstName')?.touched">
+                First name is required (min 2 characters).
+              </span>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">Last Name</label>
+              <div class="field-wrap">
+                <span class="field-icon">👤</span>
+                <input class="field-input" [formControl]="guestForm.get('lastName')" placeholder="Doe" />
+              </div>
+              <span class="field-error" *ngIf="guestForm.get('lastName')?.invalid && guestForm.get('lastName')?.touched">
+                Last name is required.
+              </span>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">Email</label>
+              <div class="field-wrap">
+                <span class="field-icon">📧</span>
+                <input class="field-input" [formControl]="guestForm.get('email')" placeholder="john@example.com" />
+              </div>
+              <span class="field-error" *ngIf="guestForm.get('email')?.invalid && guestForm.get('email')?.touched">
+                Valid email is required.
+              </span>
+            </div>
+          }
+
           <div class="field-group">
             <label class="field-label">Street Address</label>
             <div class="field-wrap">
@@ -62,6 +102,14 @@
               <label class="payment-option" [class.selected]="f['paymentMethod'].value === 'card'">
                 <input type="radio" formControlName="paymentMethod" value="card" />
                 <span class="pay-icon">💳</span> Credit Card
+              </label>
+              <label class="payment-option" [class.selected]="f['paymentMethod'].value === 'paypal'">
+                <input type="radio" formControlName="paymentMethod" value="paypal" />
+                <span class="pay-icon">🅿️</span> PayPal
+              </label>
+              <label class="payment-option" [class.selected]="f['paymentMethod'].value === 'wallet'">
+                <input type="radio" formControlName="paymentMethod" value="wallet" />
+                <span class="pay-icon">👛</span> Wallet
               </label>
             </div>
           </div>
