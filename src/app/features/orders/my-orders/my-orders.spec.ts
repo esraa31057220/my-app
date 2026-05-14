@@ -17,6 +17,7 @@ describe('MyOrders', () => {
           provide: AuthService,
           useValue: {
             getCurrentUser: () => ({ id: '1', firstName: 'A', lastName: 'B', email: 'a@b.c', password: '', role: 'Customer' }),
+            isLoggedIn: () => true,
             isAdmin: () => false,
           },
         },
@@ -24,9 +25,11 @@ describe('MyOrders', () => {
           provide: OrderService,
           useValue: {
             getMyOrders: () => of([]),
+            getMyOrdersExtended: () => of([]),
             getAllOrders: () => of([]),
             sortOrdersDesc: (o: unknown[]) => o ?? [],
             updateOrderStatusWithNotify: () => of({}),
+            normalizeStatus: (s: string) => s,
           },
         },
       ],

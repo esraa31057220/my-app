@@ -1,11 +1,18 @@
-import { Component, OnInit, inject, DestroyRef } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { catchError, EMPTY, finalize } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, of, switchMap } from 'rxjs';
+import { catchError, finalize, map, startWith } from 'rxjs/operators';
 import { OrderService } from '../../../core/services/order.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { IOrder } from '../../../models/iorder';
+
+interface OrdersViewState {
+  loading: boolean;
+  error: string;
+  orders: IOrder[];
+}
 
 @Component({
   selector: 'app-my-orders',
@@ -14,10 +21,7 @@ import { IOrder } from '../../../models/iorder';
   templateUrl: './my-orders.html',
   styleUrl: './my-orders.css',
 })
-export class MyOrders implements OnInit {
-  orders: IOrder[] = [];
-  ordersLoading = false;
-  ordersError = '';
+export class MyOrders {
   statusUpdatingId: string | number | null = null;
 
   readonly adminStatusOptions: string[] = [
@@ -32,39 +36,32 @@ export class MyOrders implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly destroyRef = inject(DestroyRef);
 
-  ngOnInit(): void {
-    // Use isLoggedIn() — the orders API authenticates via JWT token, not by user id
+  /** Local cache of the last-loaded orders so admin status changes can mutate it without re-fetching. */
+  private readonly ordersCache$ = new BehaviorSubject<IOrder[]>([]);
+
+  /** Single source of truth consumed via async pipe — no manual subscription needed. */
+  readonly state$: Observable<OrdersViewState> = this.buildInitialFetch$();
+
+  private buildInitialFetch$(): Observable<OrdersViewState> {
     if (!this.authService.isLoggedIn()) {
-      this.ordersError = 'Please log in to view your orders.';
-      return;
+      return of({ loading: false, error: 'Please log in to view your orders.', orders: [] });
     }
-    this.loadOrders();
-  }
-
-  loadOrders(): void {
-    this.ordersLoading = true;
-    this.ordersError = '';
-
     const source$ = this.authService.isAdmin()
       ? this.orderService.getAllOrders()
       : this.orderService.getMyOrdersExtended();
 
-    source$
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        catchError(() => {
-          this.ordersError = 'Could not load orders. Please try again later.';
-          return EMPTY;
-        }),
-        finalize(() => {
-          this.ordersLoading = false;
-        })
-      )
-      .subscribe({
-        next: (orders) => {
-          this.orders = this.orderService.sortOrdersDesc(orders ?? []);
-        },
-      });
+    return source$.pipe(
+      takeUntilDestroyed(this.destroyRef),
+      map((orders) => this.orderService.sortOrdersDesc(orders ?? [])),
+      switchMap((orders) => {
+        this.ordersCache$.next(orders);
+        return this.ordersCache$.pipe(
+          map((latest) => ({ loading: false, error: '', orders: latest })),
+        );
+      }),
+      catchError(() => of({ loading: false, error: 'Could not load orders. Please try again later.', orders: [] as IOrder[] })),
+      startWith({ loading: true, error: '', orders: [] as IOrder[] }),
+    );
   }
 
   isAdmin(): boolean {
@@ -93,12 +90,17 @@ export class MyOrders implements OnInit {
         }),
         finalize(() => {
           this.statusUpdatingId = null;
-        })
+        }),
       )
       .subscribe({
         next: (updated) => {
-          const i = this.orders.findIndex((o) => String(o.id) === String(id));
-          if (i >= 0) this.orders[i] = { ...this.orders[i], ...updated };
+          const current = this.ordersCache$.value;
+          const i = current.findIndex((o) => String(o.id) === String(id));
+          if (i >= 0) {
+            const next = [...current];
+            next[i] = { ...next[i], ...updated };
+            this.ordersCache$.next(next);
+          }
         },
       });
   }
